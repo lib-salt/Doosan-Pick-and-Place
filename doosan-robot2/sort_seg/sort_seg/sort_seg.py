@@ -9,9 +9,11 @@ import time
 import sys
 import os
 import rclpy
-sys.path.append(os.path.abspath("/home/jacobs/ros2_ws/src/doosan-robot2/common2/imp"))
+sys.path.append(os.path.abspath("/home/jacobs/ros2_ws/src/Sort-and-Segregate/common2/imp"))
+# sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__),"../../common2/imp")))
 import DR_init
-sys.path.append(os.path.abspath("/home/jacobs/ros2_ws/src/doosan-robot2/sort_seg/sort_seg"))
+sys.path.append(os.path.abspath("/home/jacobs/ros2_ws/src/Sort-and-Segregate/sort_seg/sort_seg"))
+sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 from robot_controller import RobotController
 
 node = RobotController()
@@ -45,8 +47,11 @@ def get_coords():
     y = node.y *1000.0
 
     # node.get_logger().info(f"Spring_height: {node.z}")
-    # z = 362 + (node.z *1000.0) # height of  gripper and table
-    z = 380 
+    if node.z < 0.02:
+        z = 380
+    else:
+        z = 362 + (node.z *1000.0) # height of  gripper and table
+     
 
     node.get_logger().info(f"Received coordinates: x={x}, y={y}, z={z}")
     return x, y, z
