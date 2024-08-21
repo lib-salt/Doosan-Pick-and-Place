@@ -9,7 +9,7 @@ from sensor_msgs.msg import Image, CameraInfo
 import tf2_ros
 from tf2_ros import TransformStamped
 from cv_bridge import CvBridge
-from std_msgs.msg import String, Float64MultiArray
+from std_msgs.msg import Float64MultiArray
 import pyrealsense2 as rs
 import sys
 import os 
@@ -57,9 +57,7 @@ class ColorDetectNode(Node):
             self.detect_object(self.color_image, self.depth_image, self.camera_info)
 
     def detect_object(self, color_image, depth_image, camera_info):
-        # Get the intrinsic paramete
-        self.center_coordinates = []
-        # intrinsics = self.pipeline.get_active_profile().get_stream(rs.stream.color).as_video_stream_profile().get_intrinsics()
+        # Get the intrinsic parameter
         intrinsics = camera_info.k
 
         intrinsics = rs.intrinsics()
@@ -136,7 +134,6 @@ class ColorDetectNode(Node):
 
         # Display the color image with bounding boxes
         cv2.imshow('Color Image', color_image)
-        # cv2.imshow('Depth Image', depth_image)
         cv2.waitKey(1)
 
 def main(args=None):

@@ -31,11 +31,9 @@ class ObjectTransformer(Node):
         object_coordinates = list(msg.data)
 
         # Apply transformation to co-ordinates
-        # self.apply_transformation(object_coordinates)
         transformed_pose = self.apply_transformation(object_coordinates)
         
         if transformed_pose is not None:
-            # self.get_logger().info(f"Transformed coordinates: {transformed_pose.pose}")
             self.publisher.publish(transformed_pose.pose)
 
 
@@ -44,7 +42,6 @@ class ObjectTransformer(Node):
             # Get transformation from camera to marker
             transformation = self.tf_buffer.lookup_transform(
                 'base_link',  # Robot frame
-                # 'base_link',  # Marker frame
                 'camera_color_optical_frame',  # Camera frame
                 rclpy.time.Time(),rclpy.duration.Duration(seconds=1))  
             return transformation
@@ -85,10 +82,6 @@ class ObjectTransformer(Node):
         t.transform.translation.y = pose_in_robot_frame.pose.position.y
         t.transform.translation.z = pose_in_robot_frame.pose.position.z
         self.tf_broadcaster.sendTransform(t)
-
-        # # self.publisher.publish(pose_in_robot_frame.pose)
-        # self.get_logger().info(f"------------Transformed Pose: ({pose_in_robot_frame.pose.position.x}, "
-        #                f"{pose_in_robot_frame.pose.position.y}, {pose_in_robot_frame.pose.position.z})")
 
         return pose_in_robot_frame
 
