@@ -1,12 +1,13 @@
 import os
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, RegisterEventHandler, TimerAction
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, RegisterEventHandler, TimerAction, Shutdown
 from launch.event_handlers import OnProcessStart, OnProcessExit
 from launch.substitutions import Command, FindExecutable, PathJoinSubstitution, LaunchConfiguration
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
-from ament_index_python.packages import get_package_share_directory, get_package_prefix
+from ament_index_python.packages import get_package_share_directory
+
 
 def generate_launch_description():
     ARGUMENTS =[ 
@@ -81,13 +82,6 @@ def generate_launch_description():
         arguments=["joint_state_broadcaster", "-c", "controller_manager"],
     )
 
-    # dsr_position_controller_spawner = Node(
-    #     package="controller_manager",
-    #     executable="spawner",
-    #     namespace=LaunchConfiguration('name'),
-    #     arguments=["dsr_position_controller", "--controller-manager", "controller_manager"],
-    # )
-
     robot_controller_spawner = Node(
         package="controller_manager",
         namespace=LaunchConfiguration('name'),
@@ -99,7 +93,8 @@ def generate_launch_description():
     # Camera node
     camera_node = IncludeLaunchDescription(
         PathJoinSubstitution([
-                FindPackageShare('realsense2_camera'),
+                # FindPackageShare('realsense2_camera'),
+                FindPackageShare('sort_seg'),
                 'launch',
                 'rs_launch.py'
         ])
@@ -128,16 +123,10 @@ def generate_launch_description():
         remappings=[("image","aruco_quadruple/result")]
     )
 
-    # TF from camera to aruco
-    frame_listener_aruco = Node(
-        package='sort_seg', 
-        executable='frame_listener_aruco',
-    )
-
-    # Transformed co-ordinates
-    camera_to_aruco = Node(
-        package="sort_seg",
-        executable="camera_to_aruco",
+    # Transformation 
+    cam_map = Node(
+        package='sort_seg',
+        executable='cam_map',
     )
 
     # Static transforamtion between robot and aruco marker
@@ -147,9 +136,9 @@ def generate_launch_description():
         name="static_transform_publisher",
         output="screen",
         arguments=[
-            "0.13923", 
-            "-0.42024",
-            "-0.00751", 
+            "0.08526", 
+            "-0.53316",
+            "0", 
             "0", 
             "0", 
             "0", 
@@ -158,58 +147,46 @@ def generate_launch_description():
         ]
     )
 
-    # TF from aruco to robot
-    aruco_to_robot = Node(
-        package="sort_seg",
-        executable="aruco_to_robot"
-    )
+    # # Communication with robot
+    # connect_test = Node(
+    #     package="sort_seg",
+    #     executable="connect_test"
+    # )
 
     # Communication with robot
-    connect_test = Node(
+    sort_seg = Node(
         package="sort_seg",
-        executable="connect_test"
+        executable="sort_seg"
     )
-
-    # # Communication with robot
-    # sort_seg = Node(
-    #     package="sort_seg",
-    #     executable="sort_seg.py"
-    # )
 
 
     on_image_viewer_start = RegisterEventHandler(event_handler=OnProcessStart(
         target_action= image_view_node, 
-        on_start=[color_detect, 
-                  frame_listener_aruco]
+        on_start=[color_detect]
     ))
 
-    on_frame_listener_aruco_start = RegisterEventHandler(event_handler=OnProcessStart(
-        target_action = frame_listener_aruco, 
-        on_start = [camera_to_aruco]
-    ))
-
-    on_camera_to_aruco_start = RegisterEventHandler(event_handler=OnProcessStart(
-        target_action = camera_to_aruco, 
+    on_cam_map_start = RegisterEventHandler(event_handler=OnProcessStart(
+        target_action = cam_map, 
         on_start=[
             TimerAction(
-                period=2.0,  # wait for 5 seconds
+                period=2.0,  # wait for 2 seconds
                 actions=[static_transform_publisher]
             )]
     ))
 
-    on_static_transform_publisher_start = RegisterEventHandler(event_handler=OnProcessStart(
-        target_action= static_transform_publisher,
-        on_start=[aruco_to_robot]
-    ))
-
-    on_boradcaster_exit = RegisterEventHandler(event_handler=OnProcessExit(
+    on_broadcaster_exit = RegisterEventHandler(event_handler=OnProcessExit(
         target_action=joint_state_broadcaster_spawner,
-        on_exit=[robot_controller_spawner] # [dsr_position_controller_spawner, robot_controller_spawner]
+        on_exit=[robot_controller_spawner, cam_map] 
     ))
 
     on_spawner_exit = RegisterEventHandler(event_handler=OnProcessExit(
         target_action=robot_controller_spawner,
-        on_exit=[connect_test] # [sort_seg]
+        on_exit=[sort_seg] 
+    ))
+
+    on_sort_seg_exit = RegisterEventHandler(event_handler=OnProcessExit(
+        target_action=sort_seg,
+        on_exit=[Shutdown()] 
     ))
 
     nodes = [
@@ -221,11 +198,10 @@ def generate_launch_description():
         aruco_quadruple,
         image_view_node,
         on_image_viewer_start,
-        on_frame_listener_aruco_start,
-        on_camera_to_aruco_start,
-        on_static_transform_publisher_start,
-        on_boradcaster_exit,
+        on_cam_map_start,
+        on_broadcaster_exit,
         on_spawner_exit,
+        on_sort_seg_exit,
     ]
     
     return LaunchDescription(ARGUMENTS + nodes)
