@@ -33,7 +33,8 @@ setup(
             'frame_listener_robot = sort_seg.frame_listener_robot:main',
             'camera_to_aruco = sort_seg.camera_to_aruco:main',
             'aruco_to_robot = sort_seg.aruco_to_robot:main',
-            'cam_map = sort_seg.cam_map:main'
+            'cam_map = sort_seg.cam_map:main',
+            'sort_seg = sort_seg.sort_seg:main'
         ],
     },
 )
