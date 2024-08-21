@@ -37,11 +37,13 @@ $ sudo apt install ros-humble-aruco
 $ sudo apt install ros-humble-image-view
 $ sudo apt install ros-humble-ros2-control
 
-### Recommended to use the /home/<user_home>/ros2_ws/src
+### Recommended to use the /home/<user>/ros2_ws/src
 $ mkdir -p ~/ros2_ws/src
 $ cd ~/ros2_ws/src
 $ git clone -b sort_seg https://github.com/lib-salt/Sort-and-Segregate
 $ rosdep install -r --from-paths . --ignore-src --rosdistro $ROS_DISTRO -y
+$ sudo apt-get install python3-rosdep -y
+$ rosdep install -i --from-path src --rosdistro $ROS_DISTRO --skip-keys=librealsense2 -y
 $ ./install_emulator.sh
 $ cd ~/ros2_ws
 $ colcon build
@@ -51,7 +53,7 @@ $ . install/setup.bash
 ### Check your setup:
 The workspace should have the following setup: 
 ```
-~/your_workspace/src
+/home/<user>/ros2_ws/src
 .../doosan-robot2
 .../gz_ros2_control
 .../onrobot
@@ -84,14 +86,45 @@ ros2 launch m1013_moveit_config start.launch.py color:=blue
 ```
 
 
-### Launching Sort Segregate Programme:
+### Camera Node:
+To launch just the camera node run the following command:
+
+```
+  ros2 launch sort_seg rs_launch.py
+```
+
+To view the camera output, use the Intel RealSense Viewer to visualize the live feed from the camera.
+```
+realsense-viewer
+```
+
+Alternatively you can use another image viewer:
+```
+rqt
+```
+Then navigate to Plugins > Visualisation > Image View and select the relevant topic to check for output.
+
+
+### Aruco Markers Visualisation:
+To start tracking the marker and publish its pose in the camera frame run the following command:
+```
+  ros2 launch sort_seg quadruple.launch.py
+```
+
+Allow for visualisation of the aruco marker and it's pose in the camera frame:
+```
+ros2 run image-view image-view --ros-args --remap image:=/aruco_quadruple/result
+```
+
+
+### Launching the Sort Segregate Programme:
 To launch the Sort and Segregate spring task use:
 
 ```
 ros2 launch sort_seg sort_seg.launch.py
 ```
 
-
+-----------------------------------------------------------------------------------------------------------------
 ## Further Documentation:
 Further documentation and resources for the Doosan robot and gripper can be found at the github repositories below:
 
