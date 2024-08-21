@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>sort_seg</name>
+  <version>1.2.0</version>
+  <description>Sort Seg package for Doosan Robot</description>
+  <maintainer email="libby@example.com">Libby</maintainer>
+  <license>BSD</license>  
+  
+  <test_depend>ament_copyright</test_depend>
+  <test_depend>ament_flake8</test_depend>
+  <test_depend>ament_pep257</test_depend>
+  <test_depend>python3-pytest</test_depend>
+  <test_depend>ament_cmake</test_depend>  
+  
+  <build_depend>rclpy</build_depend>
+  <build_depend>message_generation</build_depend>
+  <build_depend>actionlib</build_depend>
+  <build_depend>actionlib_msgs</build_depend>
+  <build_depend>dsr_msg2</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  
+  <exec_depend>message_runtime</exec_depend>
+  <exec_depend>moveit_commander</exec_depend>
+  <exec_depend>ament_index_python</exec_depend>
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>rclcpp</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>dsr_msgs2</exec_depend>
+  
+  <buildtool_depend>ament_python</buildtool_depend>
+  
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>
