@@ -1,4 +1,4 @@
-# Title
+# Sort and Segregate Project
 
 ## Overview
 
@@ -13,16 +13,16 @@ The main aim of the project was to separate coloured springs from a pile of rubb
 ### Doosan M1013:
 - Using the teach pendent ensure that the safety zone is enabled and set correctly so it can't collide with the camera
 - Ensure the gripper weight is set to grippy_tool
-- check if the gripper controls are working by entering status and turning on and off the contoller digital output port 1
+- Check if the gripper controls are working by entering status and turning on and off the contoller digital output port 1
 - The IP of the robot is set to 192.168.1.100 (if changed will have to change the argument upon launch)
 
 ### D455 Camera:
-- When powered on green light will display on the side and can acces web client using the grippers ip (192.168.1.1)
-- Make sure in the WebLogic tab the SPRING is running
+- Make sure to connect the camera to the laptop using a 3.2 USB
+- Install the Realsense SDK and library on the laptop
 
 ### Aruco Markers:
-- When powered on green light will display on the side and can acces web client using the grippers ip (192.168.1.1)
-- Make sure in the WebLogic tab the SPRING is running
+- Print off the aruco marker given in the github
+- Place the Aruco marker in the environment ensuring it is visible to the camera.
 
 
 ## ROS Workspace Setup:
@@ -60,40 +60,39 @@ The workspace should have the following setup:
 The path to "src/doosan-robot2/common2/imp" should be added as a python path to the ~/.bashrc file to allow for modules to be imported, or any alternative methods that allow for the same usability.
 
 If the packages have been directly installed from the original github respositories the following changes need to be made:
-  -sort_seg package needs to be added to doosan-robot2
-  -the packages common2 and dsr_description2 will need to be replaced with the same packages located in this repository
+- sort_seg package needs to be added to doosan-robot2
+- the packages common2 and dsr_description2 will need to be replaced with the same packages located in this repository
 
 
 ## Launch: 
 
 ### Doosan Simulation:
-
 To launch a basic simulation of the doosan robot can be done by running the following command:
+
 ```
   ros2 launch dsr_bringup2 dsr_bringup2_gazebo.launch.py mode:=virtual host:=127.0.0.1
 ```
+
 Alternatively a connection to the robot can be made by setting the mode to real and changing the host address.
 
 
-
 ### Visualise Doosan and Gripper:
+Allow for visualisation of the robot and gripper in rviz:
 
-Allow for visualisation of the robot and gripper in rviz
 ```
 ros2 launch m1013_moveit_config start.launch.py color:=blue
 ```
 
 
 ### Launching Sort Segregate Programme:
-
 To launch the Sort and Segregate spring task use:
+
 ```
 ros2 launch sort_seg sort_seg.launch.py
 ```
 
 
-## Githubs:
-
+## Further Documentation:
 Further documentation and resources for the Doosan robot and gripper can be found at the github repositories below:
 
 https://github.com/doosan-robotics/doosan-robot2/tree/humble-devel (Doosan Robotics)
@@ -103,21 +102,6 @@ https://github.com/Osaka-University-Harada-Laboratory/onrobot (OnRobot gripper R
 https://github.com/BrettRD/onrobot_grippers (OnRobot gripper ROS2)
 
 https://github.com/pal-robotics/aruco_ros (Aruco Markers ROS)
-
-
-
-## Necesary installations:
-
-realsense library and sdk
-
-aruco package (sudo apt install ros-humble-aruco)
-
-doosan
-
-onrobot(optional)
-
-
-
 
 
 
