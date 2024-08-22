@@ -10,11 +10,17 @@ import tf2_ros
 from tf2_ros import TransformStamped
 from cv_bridge import CvBridge
 from std_msgs.msg import Float64MultiArray
+from geometry_msgs.msg import Pose, Quaternion
 import pyrealsense2 as rs
 import sys
 import os 
-sys.path.append(os.path.abspath("/home/jacobs/ros2_ws/src/librealsense"))
-# import librealsense as rs2
+from rclpy.qos import qos_profile_sensor_data
+import math
+from scipy.spatial.transform import Rotation as R
+
+
+
+
 
 class ColorDetectNode(Node):
     def __init__(self):
@@ -27,7 +33,7 @@ class ColorDetectNode(Node):
         self.camera_info_sub = self.create_subscription(CameraInfo, '/camera/camera/color/camera_info', self.camera_info_callback, 10)
 
         # Create a publisher for object coordinates
-        self.object_coords_pub = self.create_publisher(Float64MultiArray, '/color_detect_node/object_coords', 10)
+        self.object_coords_pub = self.create_publisher(Pose, '/color_detect_node/object_coords', 10)
 
         # Create a CvBridge object
         self.bridge = CvBridge()
@@ -88,14 +94,32 @@ class ColorDetectNode(Node):
         # Draw bounding boxes around detected objects
         self.center_coordinates = []
         for contour in contours:
-            x, y, w, h = cv2.boundingRect(contour)
-            area = w*h
-            if 20 <= area <= 1500:    # refine boundaries
-                cv2.rectangle(color_image, (x, y), (x + w, y + h), (0, 255, 0), 2)
+            # x, y, w, h = cv2.boundingRect(contour)
+            # area = w*h
+            rect = cv2.minAreaRect(contour)
+            box = cv2.boxPoints(rect)
+            box = np.int0(box)
+
+            (center, (width, height), angle) = rect
+            area = width * height
+
+
+            if 0 < area <= 1500:    # refine boundaries
+                # # Get the rotated rectangle
+                # rect = cv2.minAreaRect(contour)
+                # # Draw the rotated rectangle
+                # box = cv2.boxPoints(rect)
+                # box = np.int0(box)
+                cv2.drawContours(color_image, [box], 0, (255, 0, 0), 2)
+
+                # cv2.rectangle(color_image, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
                 # Calculate center coordinates
-                center_x = x + w / 2 
-                center_y =  y + h / 2
+                # center_x = x + w / 2 
+                # center_y =  y + h / 2
+
+                center_x = rect[0][0]
+                center_y = rect[0][1]
 
                 # Bounds checking
                 center_x = max(0, min(center_x, depth_image.shape[1] - 1))
@@ -109,13 +133,24 @@ class ColorDetectNode(Node):
                     point = rs.rs2_deproject_pixel_to_point(intrinsics, [center_x, center_y], depth_value)
 
                     point_3d = [point[0] / 1000.0, point[1] / 1000.0, point[2] / 1000.0]
+
+                    # Calculate orientation of the object
+                    # angle_radians = math.radians(angle)
+                    # qx, qy, qz, qw = quaternion.from_rotation_vector([0, 0, angle_radians])
+                    # pose_orientation = quaternion.quaternion(qw, qx, qy, qz)
                     
                     # Annotate center coordinates and distance on the image
-                    cv2.putText(color_image, f"({point[0]:.2f}, {point[1]:.2f}, {point[2]:.2f})", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
+                    cv2.putText(color_image, f"({point[0]:.2f}, {point[1]:.2f}, {point[2]:.2f})", (int(center_x), int(center_y) - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
 
                     # Publish each coordinate separately
-                    msg = Float64MultiArray()
-                    msg.data = point_3d
+                    msg = Pose()
+                    msg.position.x = point_3d[0]
+                    msg.position.y = point_3d[1]
+                    msg.position.z = point_3d[2]
+                    # msg.orientation.x = float(orientation[0])
+                    # msg.orientation.y = float(orientation[1])
+                    # msg.orientation.z = float(orientation[2])
+                    # msg.orientation.w = float(orientation[3])
                     self.object_coords_pub.publish(msg)
                      # Broadcast the center fo the object
                     t = TransformStamped()
@@ -127,7 +162,6 @@ class ColorDetectNode(Node):
                     t.transform.translation.z = point_3d[2]
                     self.tf_broadcaster.sendTransform(t)
 
-
         # Draw a cross at the camera's zero-zero value
         cv2.line(color_image, (zero_zero_x - 10, zero_zero_y), (zero_zero_x + 10, zero_zero_y), (255, 0, 0), 2) 
         cv2.line(color_image, (zero_zero_x, zero_zero_y - 10), (zero_zero_x, zero_zero_y + 10), (255, 0, 0), 2)
@@ -135,6 +169,7 @@ class ColorDetectNode(Node):
         # Display the color image with bounding boxes
         cv2.imshow('Color Image', color_image)
         cv2.waitKey(1)
+
 
 def main(args=None):
     rclpy.init(args=args)
