@@ -139,8 +139,8 @@ Open TF Frames, and visualise the following Frames:
 - link i (if you want to visualise the links of the robot)
 
 Open DepthCloud, and open the following topics to visualise the camera's output:
-**Depth Map Topic:** /camera/camera/aligned_depth_to_color/image_raw
-**Color Image Topic:** /camera/camera/color/image_raw
+- **Depth Map Topic:** /camera/camera/aligned_depth_to_color/image_raw
+- **Color Image Topic:** /camera/camera/color/image_raw
 
 -----------------------------------------------------------------------------------------------------------------
 ## Further Documentation:
