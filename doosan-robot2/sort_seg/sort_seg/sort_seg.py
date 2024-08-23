@@ -48,7 +48,7 @@ def close_grip():
 def get_coords():
     x = node.x *1000.0
     y = node.y *1000.0
-    # node.get_logger().info(f"Spring_height: {node.z}")
+    node.get_logger().info(f"Spring_height: {node.z}")
     if node.z < 0.02:
         z = 380
     else:
@@ -118,10 +118,10 @@ def move(x, y, z, qx, qy, qz, qw):
 
         node.get_logger().info(f"Received angles: r={roll_deg}, p={pitch_deg}, y={yaw_deg}")
 
-        bin = posx(-596, -69, 680, 25, -180, yaw_deg + 45)
-        mid = posx(-85, 533, 680, 35, -180, yaw_deg + 45)
-        above_spring = posx(x, y, z+120, roll_deg, -180, yaw_deg +45)
-        spring = posx(x, y, z, roll_deg, -180, yaw_deg + 45)
+        bin = posx(-596, -69, 680, 25, -180, yaw_deg)
+        mid = posx(-85, 533, 680, 35, -180, yaw_deg)
+        above_spring = posx(x, y, z+120, roll_deg, -180, yaw_deg)
+        spring = posx(x, y, z, roll_deg, -180, yaw_deg)
         # above_spring = posx(x, y, z+120, 25, 180, 50)
         # spring = posx(x, y, z, 25, 180, 50)
         to_spring_x_pos = [bin, mid, above_spring, spring]
