@@ -94,8 +94,7 @@ class ColorDetectNode(Node):
         # Draw bounding boxes around detected objects
         self.center_coordinates = []
         for contour in contours:
-            # x, y, w, h = cv2.boundingRect(contour)
-            # area = w*h
+
             rect = cv2.minAreaRect(contour)
             box = cv2.boxPoints(rect)
             box = np.int0(box)
@@ -105,18 +104,7 @@ class ColorDetectNode(Node):
 
 
             if 0 < area <= 1500:    # refine boundaries
-                # # Get the rotated rectangle
-                # rect = cv2.minAreaRect(contour)
-                # # Draw the rotated rectangle
-                # box = cv2.boxPoints(rect)
-                # box = np.int0(box)
                 cv2.drawContours(color_image, [box], 0, (255, 0, 0), 2)
-
-                # cv2.rectangle(color_image, (x, y), (x + w, y + h), (0, 255, 0), 2)
-
-                # Calculate center coordinates
-                # center_x = x + w / 2 
-                # center_y =  y + h / 2
 
                 center_x = rect[0][0]
                 center_y = rect[0][1]
@@ -134,10 +122,16 @@ class ColorDetectNode(Node):
 
                     point_3d = [point[0] / 1000.0, point[1] / 1000.0, point[2] / 1000.0]
 
-                    # Calculate orientation of the object
+                    # # Calculate orientation of the object
                     # angle_radians = math.radians(angle)
                     # qx, qy, qz, qw = quaternion.from_rotation_vector([0, 0, angle_radians])
-                    # pose_orientation = quaternion.quaternion(qw, qx, qy, qz)
+                    # # pose_orientation = quaternion.quaternion(qw, qx, qy, qz)
+
+                    # Calculate the rotation matrix from the angle
+                    rotation_matrix = R.from_euler('z', angle_radians, degrees=False).as_matrix()
+
+                    # Convert the rotation matrix to a quaternion
+                    qx, qy, qz, qw = R.from_matrix(rotation_matrix).as_quat()
                     
                     # Annotate center coordinates and distance on the image
                     cv2.putText(color_image, f"({point[0]:.2f}, {point[1]:.2f}, {point[2]:.2f})", (int(center_x), int(center_y) - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
@@ -147,12 +141,12 @@ class ColorDetectNode(Node):
                     msg.position.x = point_3d[0]
                     msg.position.y = point_3d[1]
                     msg.position.z = point_3d[2]
-                    # msg.orientation.x = float(orientation[0])
-                    # msg.orientation.y = float(orientation[1])
-                    # msg.orientation.z = float(orientation[2])
-                    # msg.orientation.w = float(orientation[3])
+                    msg.orientation.x = qx
+                    msg.orientation.y = qy
+                    msg.orientation.z = qz
+                    msg.orientation.w = qw
                     self.object_coords_pub.publish(msg)
-                     # Broadcast the center fo the object
+                    # Broadcast the center fo the object
                     t = TransformStamped()
                     t.header.stamp = self.get_clock().now().to_msg()
                     t.header.frame_id = 'camera_color_optical_frame'
