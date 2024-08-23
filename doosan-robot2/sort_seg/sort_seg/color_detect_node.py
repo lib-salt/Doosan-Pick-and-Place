@@ -4,22 +4,15 @@
 import cv2
 import numpy as np
 import rclpy
+import math
 from rclpy.node import Node
 from sensor_msgs.msg import Image, CameraInfo
 import tf2_ros
 from tf2_ros import TransformStamped
 from cv_bridge import CvBridge
-from std_msgs.msg import Float64MultiArray
-from geometry_msgs.msg import Pose, Quaternion
+from geometry_msgs.msg import Pose
 import pyrealsense2 as rs
-import sys
-import os 
-from rclpy.qos import qos_profile_sensor_data
-import math
 from scipy.spatial.transform import Rotation as R
-
-
-
 
 
 class ColorDetectNode(Node):
@@ -123,7 +116,7 @@ class ColorDetectNode(Node):
                     point_3d = [point[0] / 1000.0, point[1] / 1000.0, point[2] / 1000.0]
 
                     # # Calculate orientation of the object
-                    # angle_radians = math.radians(angle)
+                    angle_radians = math.radians(angle)
                     # qx, qy, qz, qw = quaternion.from_rotation_vector([0, 0, angle_radians])
                     # # pose_orientation = quaternion.quaternion(qw, qx, qy, qz)
 

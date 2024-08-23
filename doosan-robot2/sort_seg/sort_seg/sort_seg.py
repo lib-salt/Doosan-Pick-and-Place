@@ -48,11 +48,11 @@ def close_grip():
 def get_coords():
     x = node.x *1000.0
     y = node.y *1000.0
-    node.get_logger().info(f"Spring_height: {node.z}")
+    # node.get_logger().info(f"Spring_height: {node.z}")
     if node.z < 0.02:
         z = 380
     else:
-        z = 362 + (node.z *1000.0) # height of  gripper and table
+        z = 369 + (node.z *1000.0) # height of  gripper and table
     node.get_logger().info(f"Received coordinates: x={x}, y={y}, z={z}")
 
     qx = node.orientation.x
@@ -89,16 +89,10 @@ def get_coords():
 #     time.sleep(3)
 #     movel(to_spring, vel = 80, acc = 50)
 
-def move_to_spring(x, y ,z):
-    pass
-
-def move_to_bin():
-    pass
 
 def quaternion_to_euler(qx, qy, qz, qw):
     # Extract quaternion orientation values
     
-
     rotation = R.from_quat([qx, qy, qz, qw])
     roll, pitch, yaw = rotation.as_euler('xyz', degrees=False)
     return roll, pitch, yaw
@@ -116,14 +110,12 @@ def move(x, y, z, qx, qy, qz, qw):
         pitch_deg = math.degrees(pitch) + 180  # Add 180 degrees to pitch to account for gripper being upside down
         yaw_deg = math.degrees(yaw) 
 
-        node.get_logger().info(f"Received angles: r={roll_deg}, p={pitch_deg}, y={yaw_deg}")
+        # node.get_logger().info(f"Received angles: r={roll_deg}, p={pitch_deg}, y={yaw_deg}")
 
-        bin = posx(-596, -69, 680, 25, -180, yaw_deg)
-        mid = posx(-85, 533, 680, 35, -180, yaw_deg)
-        above_spring = posx(x, y, z+120, roll_deg, -180, yaw_deg)
-        spring = posx(x, y, z, roll_deg, -180, yaw_deg)
-        # above_spring = posx(x, y, z+120, 25, 180, 50)
-        # spring = posx(x, y, z, 25, 180, 50)
+        bin = posx(-596, -69, 680, roll_deg, 180, yaw_deg + 45)
+        mid = posx(-85, 533, 680,roll_deg, 180, yaw_deg + 45)
+        above_spring = posx(x, y, z+120, roll_deg, 180, yaw_deg)
+        spring = posx(x, y, z, roll_deg, 180, yaw_deg)
         to_spring_x_pos = [bin, mid, above_spring, spring]
         to_spring_x_neg = [bin, above_spring, spring]
         to_bin_x_pos = [above_spring, mid, bin]
@@ -131,25 +123,25 @@ def move(x, y, z, qx, qy, qz, qw):
 
         if x >= 0:
             for i in to_spring_x_pos:
-                movel(i, vel = 80, acc = 50, ra = DR_MV_RA_DUPLICATE)
+                movel(i, vel = 100, acc = 65, ra = DR_MV_RA_DUPLICATE)
                 time.sleep(0.5)
             close_grip()
             time.sleep(2)
 
             for i in to_bin_x_pos:
-                movel(i, vel = 80, acc = 50, ra = DR_MV_RA_DUPLICATE)
+                movel(i, vel = 100, acc = 65, ra = DR_MV_RA_DUPLICATE)
                 time.sleep(0.5)
             open_grip()
             time.sleep(2)
         else:
             for i in to_spring_x_neg:
-                movel(i, vel = 80, acc = 50, ra = DR_MV_RA_DUPLICATE)
+                movel(i, vel = 100, acc = 65, ra = DR_MV_RA_DUPLICATE)
                 time.sleep(0.5)
             close_grip()
             time.sleep(2)
 
             for i in to_bin_x_neg:
-                movel(i, vel = 80, acc = 50, ra = DR_MV_RA_DUPLICATE)
+                movel(i, vel = 100, acc = 65, ra = DR_MV_RA_DUPLICATE)
                 time.sleep(0.5)
             open_grip()
             time.sleep(2)
