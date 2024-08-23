@@ -8,7 +8,7 @@ The main aim of the project was to separate coloured springs from a pile of rubb
 
 ### OnRobot RG6:
 - When powered on green light will display on the side and can acces web client using the grippers ip (192.168.1.1)
-- Make sure in the WebLogic tab the SPRING is running
+- Make sure in the WebLogic tab the 'spring_grip' is running
 
 ### Doosan M1013:
 - Using the teach pendent ensure that the safety zone is enabled and set correctly so it can't collide with the camera
