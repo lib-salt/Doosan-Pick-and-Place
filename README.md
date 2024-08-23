@@ -43,7 +43,6 @@ $ cd ~/ros2_ws/src
 $ git clone -b sort_seg https://github.com/lib-salt/Sort-and-Segregate
 $ rosdep install -r --from-paths . --ignore-src --rosdistro $ROS_DISTRO -y
 $ sudo apt-get install python3-rosdep -y
-$ rosdep install -i --from-path src --rosdistro $ROS_DISTRO --skip-keys=librealsense2 -y
 $ ./install_emulator.sh
 $ cd ~/ros2_ws
 $ colcon build
