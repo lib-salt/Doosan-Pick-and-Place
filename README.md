@@ -36,6 +36,8 @@ $ sudo apt install ros-humble-realsense2-*
 $ sudo apt install ros-humble-aruco
 $ sudo apt install ros-humble-image-view
 $ sudo apt install ros-humble-ros2-control
+$ sudo apt-get install libpoco-dev libyaml-cpp-dev
+$ sudo apt-get install ros-humble-control-msgs ros-humble-realtime-tools ros-humble-xacro ros-humble-joint-state-publisher-gui ros-humble-ros2-control ros-humble-ros2-controllers ros-humble-gazebo-msgs ros-humble-moveit-msgs dbus-x11
 
 ### Recommended to use the /home/<user>/ros2_ws/src
 $ mkdir -p ~/ros2_ws/src
