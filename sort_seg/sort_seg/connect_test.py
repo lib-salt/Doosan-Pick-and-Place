@@ -11,12 +11,16 @@ import time
 import sys
 import os
 import rclpy
-sys.path.append(os.path.abspath("/home/jacobs/ros2_ws/src/doosan-robot2/common2/imp"))
-import DR_init
-sys.path.append(os.path.abspath("/home/jacobs/ros2_ws/src/doosan-robot2/sort_seg/sort_seg"))
+imp_path=os.path.join(os.path.abspath(__file__),"../../common2/imp")
+sys.path.append(os.path.abspath(imp_path))
+controller_path=os.path.abspath(os.path.join(os.path.abspath(__file__), '../'))
+sys.path.append(controller_path)
 from robot_controller import RobotController
 
 node = RobotController()
+
+import DR_init
+
 DR_init.__dsr__id = 'dsr01'
 DR_init.__dsr__model = ''
 DR_init.__dsr__node = node

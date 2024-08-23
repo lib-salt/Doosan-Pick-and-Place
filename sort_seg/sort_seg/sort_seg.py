@@ -8,18 +8,20 @@ from ament_index_python.packages import get_package_share_directory
 import time
 import sys
 import os
+from pathlib import Path
 import rclpy
 import math
 from scipy.spatial.transform import Rotation as R
 import numpy as np
-sys.path.append(os.path.abspath("/home/jacobs/ros2_ws/src/Sort-and-Segregate/common2/imp"))
-# sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__),"../../common2/imp")))
-import DR_init
-sys.path.append(os.path.abspath("/home/jacobs/ros2_ws/src/Sort-and-Segregate/sort_seg/sort_seg"))
-sys.path.append(os.path.dirname(os.path.realpath(__file__)))
+imp_path=os.path.join(os.path.abspath(__file__),"../../common2/imp")
+sys.path.append(os.path.abspath(imp_path))
+controller_path=os.path.abspath(os.path.join(os.path.abspath(__file__), '../'))
+sys.path.append(controller_path)
 from robot_controller import RobotController
 
 node = RobotController()
+
+import DR_init
 
 DR_init.__dsr__id = 'dsr01'
 DR_init.__dsr__model = ''
