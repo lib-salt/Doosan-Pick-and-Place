@@ -124,6 +124,24 @@ To launch the Sort and Segregate spring task use:
 ros2 launch sort_seg sort_seg.launch.py
 ```
 
+### Visualising the Whole Setup
+Allow for visualisation of the entire setup through RViz2:
+```
+rviz2
+```
+
+Open TF Frames, and visualise the following Frames:
+- camera_color_optical_frame
+- base_link
+- spring
+- marker2_object_frame
+- center
+- link i (if you want to visualise the links of the robot)
+
+Open DepthCloud, and open the following topics to visualise the camera's output:
+**Depth Map Topic:** /camera/camera/aligned_depth_to_color/image_raw
+**Color Image Topic:** /camera/camera/color/image_raw
+
 -----------------------------------------------------------------------------------------------------------------
 ## Further Documentation:
 Further documentation and resources for the Doosan robot and gripper can be found at the github repositories below:
