@@ -42,28 +42,12 @@ $ mkdir -p ~/ros2_ws/src
 $ cd ~/ros2_ws/src
 $ git clone -b sort_seg https://github.com/lib-salt/Sort-and-Segregate
 $ rosdep install -r --from-paths . --ignore-src --rosdistro $ROS_DISTRO -y
-$ sudo apt-get install python3-rosdep -y
+$ cd src/Sort-and-Segregate
 $ ./install_emulator.sh
 $ cd ~/ros2_ws
 $ colcon build
 $ . install/setup.bash
 ```
-
-### Check your setup:
-The workspace should have the following setup: 
-```
-/home/<user>/ros2_ws/src
-.../doosan-robot2
-.../gz_ros2_control
-.../onrobot
-```
-
-The path to "src/doosan-robot2/common2/imp" should be added as a python path to the ~/.bashrc file to allow for modules to be imported, or any alternative methods that allow for the same usability.
-
-If the packages have been directly installed from the original github respositories the following changes need to be made:
-- sort_seg package needs to be added to doosan-robot2
-- the packages common2 and dsr_description2 will need to be replaced with the same packages located in this repository
-
 
 ## Launch: 
 
