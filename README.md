@@ -142,6 +142,8 @@ Open DepthCloud, and open the following topics to visualise the camera's output:
 - **Depth Map Topic:** /camera/camera/aligned_depth_to_color/image_raw
 - **Color Image Topic:** /camera/camera/color/image_raw
 
+![Depth Cloud](etc/depthcloud.png)
+
 -----------------------------------------------------------------------------------------------------------------
 ## Further Documentation:
 Further documentation and resources for the Doosan robot and gripper can be found at the github repositories below:
