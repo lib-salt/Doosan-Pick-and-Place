@@ -119,7 +119,6 @@ def generate_launch_description():
     image_view_node =  Node(
         package="image_view",
         executable="image_view",
-        # name= "image_view_node",
         remappings=[("image","aruco_quadruple/result")]
     )
 
@@ -136,8 +135,8 @@ def generate_launch_description():
         name="static_transform_publisher",
         output="screen",
         arguments=[
-            "0.08526", 
-            "-0.53316",
+            "0.04526", 
+            "-0.51816",
             "0", 
             "0", 
             "0", 

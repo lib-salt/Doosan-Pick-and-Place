@@ -7,7 +7,7 @@ from rclpy.node import Node
 from dsr_msgs2.msg import RobotStop, RobotState
 from ament_index_python.packages import get_package_share_directory
 import time
-imp_path=os.path.join(os.path.abspath(__file__),"../../common2/imp")
+imp_path=os.path.abspath(os.path.join(os.path.abspath(__file__),"../../../../../../../src/Sort-and-Segregate/common2/imp"))
 sys.path.append(os.path.abspath(imp_path))
 import DR_init
 

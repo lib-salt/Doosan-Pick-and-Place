@@ -11,15 +11,14 @@ import time
 import sys
 import os
 import rclpy
-imp_path=os.path.join(os.path.abspath(__file__),"../../common2/imp")
-sys.path.append(os.path.abspath(imp_path))
+imp_path=os.path.abspath(os.path.join(os.path.abspath(__file__),"../../../../../../../src/Sort-and-Segregate/common2/imp"))
+sys.path.append((imp_path))
+import DR_init
 controller_path=os.path.abspath(os.path.join(os.path.abspath(__file__), '../'))
 sys.path.append(controller_path)
 from robot_controller import RobotController
 
 node = RobotController()
-
-import DR_init
 
 DR_init.__dsr__id = 'dsr01'
 DR_init.__dsr__model = ''

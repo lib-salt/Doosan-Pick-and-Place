@@ -4,24 +4,21 @@
 ###################### I N I T I A L I S E ################################
 
 from dsr_msgs2.msg import RobotStop, RobotState
-from ament_index_python.packages import get_package_share_directory
 import time
 import sys
 import os
-from pathlib import Path
 import rclpy
 import math
 from scipy.spatial.transform import Rotation as R
 import numpy as np
-imp_path=os.path.join(os.path.abspath(__file__),"../../common2/imp")
-sys.path.append(os.path.abspath(imp_path))
+imp_path=os.path.abspath(os.path.join(os.path.abspath(__file__),"../../../../../../../src/Sort-and-Segregate/common2/imp"))
+sys.path.append((imp_path))
+import DR_init
 controller_path=os.path.abspath(os.path.join(os.path.abspath(__file__), '../'))
 sys.path.append(controller_path)
 from robot_controller import RobotController
 
 node = RobotController()
-
-import DR_init
 
 DR_init.__dsr__id = 'dsr01'
 DR_init.__dsr__model = ''
