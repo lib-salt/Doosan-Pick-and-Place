@@ -55,19 +55,6 @@ class ObjectTransformer(Node):
             self.get_logger().error("Transformation not found.")
             return None
 
-         # Create a PoseStamped message for the object pose
-        # pose_in_camera_frame = PoseStamped()
-        # pose_in_camera_frame.header.frame_id = "camera_color_optical_frame"
-        # pose_in_camera_frame.pose.position.x = object_coordinates[0]
-        # pose_in_camera_frame.pose.position.y = object_coordinates[1]
-        # pose_in_camera_frame.pose.position.z = object_coordinates[2]
-        
-        # # Set a default orientation (e.g., no rotation)
-        # pose_in_camera_frame.pose.orientation.x = 0.0
-        # pose_in_camera_frame.pose.orientation.y = 0.0
-        # pose_in_camera_frame.pose.orientation.z = 0.0
-        # pose_in_camera_frame.pose.orientation.w = 1.0
-
         # Transform the pose to the marker (base_link) frame
         pose_in_robot_frame = do_transform_pose(pose_in_camera_frame, transformation)
         
