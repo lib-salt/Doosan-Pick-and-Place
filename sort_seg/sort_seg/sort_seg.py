@@ -61,34 +61,6 @@ def get_coords():
 
     return x, y, z, qx, qy, qz, qw
 
-# def move_to_midpoint():
-#     # Midpoint
-#     mid = posx(-85, 533, 450, 35, 180, 100)
-
-#     # move to midpoint
-#     movel(mid, vel = 80, acc = 50)
-#     time.sleep(1)
-
-# def move_to_bin():
-#     # Bin Position
-#     bin= posx(-596, -69, 652, 25, 180, 50)
-
-#     # move to bin
-#     movel(bin, vel = 80, acc = 50)
-#     open_grip()
-#     time.sleep(2)
-
-# def move_to_spring(x, y, z):
-#     # Spring Locations
-#     above_spring = posx(x, y, z+100, 35, 180, 100)  # 10cm above
-#     to_spring = posx(x, y, z, 35, 180, 100)
-
-#     # move to spring
-#     movel(above_spring, vel = 80, acc = 50)
-#     time.sleep(3)
-#     movel(to_spring, vel = 80, acc = 50)
-
-
 def quaternion_to_euler(qx, qy, qz, qw):
     # Extract quaternion orientation values
     
