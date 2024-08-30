@@ -39,10 +39,12 @@ def print_grip_state():
 # open gripper
 def open_grip():
     set_digital_output(1, 1) # (port number, ON)
+    time.sleep(2)
 
 # close gripper
 def close_grip():
     set_digital_output(1, 0) # (port number, OFF)
+    time.sleep(2)
 
 def get_coords():
     x = node.x *1000.0
@@ -71,14 +73,13 @@ def quaternion_to_euler(qx, qy, qz, qw):
 def move(x, y, z, qx, qy, qz, qw):
     # Checks if it hits the table
     if (z > 362) and (y > 0): 
-        # node.get_logger().info(f"moving to {x, y, z}")
-        # move to midpoint
+        node.get_logger().info(f"moving to {x, y, z}")
 
         # Convert quaternion to Euler angles (roll, pitch, yaw) if needed
         roll, pitch, yaw = quaternion_to_euler(qx, qy, qz, qw)
 
         roll_deg = math.degrees(roll)
-        pitch_deg = math.degrees(pitch) + 180  # Add 180 degrees to pitch to account for gripper being upside down
+        # pitch_deg = math.degrees(pitch) + 180  # Add 180 degrees to pitch to account for gripper being upside down
         yaw_deg = math.degrees(yaw) 
 
         # node.get_logger().info(f"Received angles: r={roll_deg}, p={pitch_deg}, y={yaw_deg}")
@@ -97,52 +98,54 @@ def move(x, y, z, qx, qy, qz, qw):
                 movel(i, vel = 100, acc = 65, ra = DR_MV_RA_DUPLICATE)
                 time.sleep(0.5)
             close_grip()
-            time.sleep(2)
 
             for i in to_bin_x_pos:
                 movel(i, vel = 100, acc = 65, ra = DR_MV_RA_DUPLICATE)
                 time.sleep(0.5)
             open_grip()
-            time.sleep(2)
+
         else:
             for i in to_spring_x_neg:
                 movel(i, vel = 100, acc = 65, ra = DR_MV_RA_DUPLICATE)
                 time.sleep(0.5)
             close_grip()
-            time.sleep(2)
 
             for i in to_bin_x_neg:
                 movel(i, vel = 100, acc = 65, ra = DR_MV_RA_DUPLICATE)
                 time.sleep(0.5)
             open_grip()
-            time.sleep(2)
-
-        # if x >= 0:
-        #     movesx(to_spring_x_pos, vel = 100, acc = 200, mod = DR_MV_MOD_ABS, vel_opt = DR_MVS_VEL_NONE)
-        #     close_grip()
-        #     time.sleep(2)
-        #     movesx(to_bin_x_pos, vel = 100, acc = 200, mod = DR_MV_MOD_ABS, vel_opt = DR_MVS_VEL_NONE)
-        # else:
-        #     movesx(to_spring_x_neg, vel = 100, acc = 200, mod = DR_MV_MOD_ABS, vel_opt = DR_MVS_VEL_NONE)
-        #     close_grip()
-        #     time.sleep(2)
-        #     movesx(to_bin_x_neg, vel = 100, acc = 200, mod = DR_MV_MOD_ABS, vel_opt = DR_MVS_VEL_NONE)
-
-        # open_grip()
-        # time.sleep(2)
 
     else:
-        node.get_logger().info('HITS TABLE!')
+        node.get_logger().info('HITS TABLE OR OUT OF BOUNDS!')
 
 def check_msg_time():
     message_time = node.last_message_time
     current_time = node.get_clock().now()
 
     if (current_time - message_time).nanoseconds > 10e9:  # 10 seconds
-        node.get_logger().info('Timeout exceeded, stopping node')
-        node.destroy_node()
-
-
+        # node.get_logger().info('Timeout exceeded, stopping node')
+        # node.destroy_node()
+        # Bin and tipping location
+        bin_above = posx(-596, -69, 450, roll_deg, 180, 90)
+        bin = posx(-596, -69, 400, roll_deg, 180, 90)
+        tip_location = posx(-596, -69, 400, roll_deg, 180, 90) # change to centre of table
+        tip_bin =  posx(-596, -69, 400, roll_deg, 180, 90) # change to centre of table with tip angle
+        # Redistribute Springs
+        node.get_logger().info('All springs colleccted, Time to make a mess!')
+        # Grab bin
+        movel(bin_above, vel = 50, acc = 65, ra = DR_MV_RA_DUPLICATE)
+        movel(bin, vel = 100, acc = 65, ra = DR_MV_RA_DUPLICATE)
+        close_grip()
+        # Tip spring box
+        movel(tip_location, vel = 50, acc = 65, ra = DR_MV_RA_DUPLICATE)
+        movel(tip_bin, vel = 100, acc = 65, ra = DR_MV_RA_DUPLICATE)
+        # Return the bin
+        movel(bin_above, vel = 50, acc = 65, ra = DR_MV_RA_DUPLICATE)
+        movel(bin, vel = 100, acc = 65, ra = DR_MV_RA_DUPLICATE)
+        open_grip()
+        movel(bin_above, vel = 50, acc = 65, ra = DR_MV_RA_DUPLICATE)
+        # Wait 2 seconds for a new message to be recieved
+        time.sleep(2)
 
 ######################### M A I N ###############################
 
@@ -152,9 +155,6 @@ def main():
     while rclpy.ok():
         # Check if any springs are being detected 
         check_msg_time()
-
-        # Move to bin first
-        # move_to_bin()
 
         # Check if the gripper is open
         if get_grip_state() == False:
