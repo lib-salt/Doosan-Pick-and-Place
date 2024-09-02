@@ -93,8 +93,20 @@ class ColorDetectNode(Node):
             box = np.int0(box)
 
             (center, (width, height), angle) = rect
+
             area = width * height
 
+            ###########
+            angle_degrees = round(angle / 45) * 45
+            if angle_degrees > 135:
+                angle_degrees -= 180
+            elif angle_degrees < -135:
+                angle_degrees += 180
+            if angle_degrees == 90:  # perpendicular case
+                if width > height:  # object is parallel to camera
+                    angle_degrees = 0
+                else:  # object is perpendicular to camera
+                    angle_degrees = 90
 
             if 0 < area <= 1500:    # refine boundaries
                 cv2.drawContours(color_image, [box], 0, (255, 0, 0), 2)
@@ -116,18 +128,24 @@ class ColorDetectNode(Node):
                     point_3d = [point[0] / 1000.0, point[1] / 1000.0, point[2] / 1000.0]
 
                     # # Calculate orientation of the object
-                    angle_radians = math.radians(angle)
+                    angle_radians = math.radians(angle_degrees)
                     # qx, qy, qz, qw = quaternion.from_rotation_vector([0, 0, angle_radians])
                     # # pose_orientation = quaternion.quaternion(qw, qx, qy, qz)
 
                     # Calculate the rotation matrix from the angle
                     rotation_matrix = R.from_euler('z', angle_radians, degrees=False).as_matrix()
+                    # rotation_matrix = R.from_euler('z', math.radians(angle), degrees=False).as_matrix()
 
                     # Convert the rotation matrix to a quaternion
                     qx, qy, qz, qw = R.from_matrix(rotation_matrix).as_quat()
-                    
+
+                    # Draw a small line or arrow at the center of the box to indicate its orientation
+                    orientation_x = center_x + 50 * math.cos(math.radians(angle_degrees))
+                    orientation_y = center_y + 50 * math.sin(math.radians(angle_degrees))
+                    cv2.line(color_image, (int(center_x), int(center_y)), (int(orientation_x), int(orientation_y)), (255, 0, 0), 1)
+
                     # Annotate center coordinates and distance on the image
-                    cv2.putText(color_image, f"({point[0]:.2f}, {point[1]:.2f}, {point[2]:.2f})", (int(center_x), int(center_y) - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
+                    cv2.putText(color_image, f"({point[0]:.2f}, {point[1]:.2f}, {point[2]:.2f}, angle:{angle_degrees:.2f})", (int(center_x), int(center_y) - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
 
                     # Publish each coordinate separately
                     msg = Pose()

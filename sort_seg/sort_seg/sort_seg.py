@@ -11,6 +11,7 @@ import rclpy
 import math
 from scipy.spatial.transform import Rotation as R
 import numpy as np
+from pynput import keyboard
 imp_path=os.path.abspath(os.path.join(os.path.abspath(__file__),"../../../../../../../src/Sort-and-Segregate/common2/imp"))
 sys.path.append((imp_path))
 import DR_init
@@ -79,15 +80,15 @@ def move(x, y, z, qx, qy, qz, qw):
         roll, pitch, yaw = quaternion_to_euler(qx, qy, qz, qw)
 
         roll_deg = math.degrees(roll)
-        # pitch_deg = math.degrees(pitch) + 180  # Add 180 degrees to pitch to account for gripper being upside down
+        pitch_deg = math.degrees(pitch) + 180  # Add 180 degrees to pitch to account for gripper being upside down
         yaw_deg = math.degrees(yaw) 
 
-        # node.get_logger().info(f"Received angles: r={roll_deg}, p={pitch_deg}, y={yaw_deg}")
+        node.get_logger().info(f"Received angles: r={roll_deg}, p={pitch_deg}, y={yaw_deg}")
 
-        bin = posx(-596, -69, 680, roll_deg, 180, yaw_deg + 45)
+        bin = posx(-645, -68, 675, roll_deg, 180, yaw_deg + 45)
         mid = posx(-85, 533, 680,roll_deg, 180, yaw_deg + 45)
-        above_spring = posx(x, y, z+120, roll_deg, 180, yaw_deg)
-        spring = posx(x, y, z, roll_deg, 180, yaw_deg)
+        above_spring = posx(x, y, z+120, roll_deg, 180, -yaw_deg)
+        spring = posx(x, y, z, roll_deg, 180, -yaw_deg)
         to_spring_x_pos = [bin, mid, above_spring, spring]
         to_spring_x_neg = [bin, above_spring, spring]
         to_bin_x_pos = [above_spring, mid, bin]
@@ -123,28 +124,29 @@ def check_msg_time():
     current_time = node.get_clock().now()
 
     if (current_time - message_time).nanoseconds > 10e9:  # 10 seconds
-        # node.get_logger().info('Timeout exceeded, stopping node')
-        # node.destroy_node()
         # Bin and tipping location
-        bin_above = posx(-596, -69, 450, roll_deg, 180, 90)
-        bin = posx(-596, -69, 400, roll_deg, 180, 90)
-        tip_location = posx(-596, -69, 400, roll_deg, 180, 90) # change to centre of table
-        tip_bin =  posx(-596, -69, 400, roll_deg, 180, 90) # change to centre of table with tip angle
+        mid = posx(-85, 533, 680,38, 180, 40)
+        bin_above = posx(-635, -165, 530, 25, 180, -65)
+        bin = posx(-635, -165, 475, 25, 180, -65)
+        tip_location = posx(456, -2, 720, 36, 180, 120) # change to centre of table
+        tip_bin =  posx(456, 10, 720, 95, 90, -180) # change to centre of table with tip angle
+        tip_shake_1 = posx(456, 10, 720, 95, 90, -135)
+        tip_shake_2 = posx(456, 10, 720, 95, 93, 135)
+        bin_grab = [bin_above, bin]
+        tip = [bin_above, mid, tip_location, tip_bin, tip_shake_1, tip_shake_2, tip_bin, tip_location, mid, bin_above, bin]
         # Redistribute Springs
         node.get_logger().info('All springs colleccted, Time to make a mess!')
         # Grab bin
-        movel(bin_above, vel = 50, acc = 65, ra = DR_MV_RA_DUPLICATE)
-        movel(bin, vel = 100, acc = 65, ra = DR_MV_RA_DUPLICATE)
+        for i in bin_grab:
+            movel(i, vel = 100, acc = 65, ra = DR_MV_RA_DUPLICATE)
+            time.sleep(0.5)
         close_grip()
-        # Tip spring box
-        movel(tip_location, vel = 50, acc = 65, ra = DR_MV_RA_DUPLICATE)
-        movel(tip_bin, vel = 100, acc = 65, ra = DR_MV_RA_DUPLICATE)
-        # Return the bin
-        movel(bin_above, vel = 50, acc = 65, ra = DR_MV_RA_DUPLICATE)
-        movel(bin, vel = 100, acc = 65, ra = DR_MV_RA_DUPLICATE)
+        # Tip and return bin
+        for i in tip:
+            movel(i, vel = 100, acc = 65, ra = DR_MV_RA_DUPLICATE)
+            time.sleep(0.5)
         open_grip()
-        movel(bin_above, vel = 50, acc = 65, ra = DR_MV_RA_DUPLICATE)
-        # Wait 2 seconds for a new message to be recieved
+        movel(bin_above, vel = 100, acc = 65, ra = DR_MV_RA_DUPLICATE)
         time.sleep(2)
 
 ######################### M A I N ###############################
