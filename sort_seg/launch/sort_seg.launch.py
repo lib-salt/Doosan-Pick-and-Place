@@ -135,8 +135,8 @@ def generate_launch_description():
         name="static_transform_publisher",
         output="screen",
         arguments=[
-            "0.04526", 
-            "-0.51816",
+            "0.08427", # 0.06227 # 0.03500 # 
+            "-0.54377", # -0.49377
             "0", 
             "0", 
             "0", 
