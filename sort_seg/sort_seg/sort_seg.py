@@ -128,8 +128,8 @@ def check_msg_time():
         mid = posx(-85, 533, 680,38, 180, 40)
         bin_above = posx(-635, -165, 530, 25, 180, -65)
         bin = posx(-635, -165, 475, 25, 180, -65)
-        tip_location = posx(456, -2, 720, 36, 180, 120) # change to centre of table
-        tip_bin =  posx(456, 10, 720, 95, 90, -180) # change to centre of table with tip angle
+        tip_location = posx(456, -2, 720, 36, 180, 120) 
+        tip_bin =  posx(456, 10, 720, 95, 90, -180) 
         tip_shake_1 = posx(456, 10, 720, 95, 90, -135)
         tip_shake_2 = posx(456, 10, 720, 95, 93, 135)
         bin_grab = [bin_above, bin]
