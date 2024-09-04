@@ -57,7 +57,7 @@ class ObjectTransformer(Node):
 
         # Transform the pose to the marker (base_link) frame
         pose_in_robot_frame = do_transform_pose(pose_in_camera_frame, transformation)
-        
+
         # Broadcast the transformation
         t = TransformStamped()
         t.header.stamp = self.get_clock().now().to_msg()
@@ -66,6 +66,10 @@ class ObjectTransformer(Node):
         t.transform.translation.x = pose_in_robot_frame.position.x
         t.transform.translation.y = pose_in_robot_frame.position.y
         t.transform.translation.z = pose_in_robot_frame.position.z
+        t.transform.rotation.x = pose_in_robot_frame.orientation.x
+        t.transform.rotation.y = pose_in_robot_frame.orientation.y
+        t.transform.rotation.z = pose_in_robot_frame.orientation.z
+        t.transform.rotation.w = pose_in_robot_frame.orientation.w
         self.tf_broadcaster.sendTransform(t)
 
         return pose_in_robot_frame
