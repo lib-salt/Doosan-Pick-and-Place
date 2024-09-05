@@ -12,17 +12,17 @@ from ament_index_python.packages import get_package_share_directory
 
 def generate_launch_description():
     ARGUMENTS =[ 
-      DeclareLaunchArgument('name',  default_value = 'dsr01',     description = 'NAME_SPACE'    ),
-      DeclareLaunchArgument('host',  default_value = '192.168.1.100', description = 'ROBOT_IP'  ),
-      DeclareLaunchArgument('port',  default_value = '12345',     description = 'ROBOT_PORT'    ),
-      DeclareLaunchArgument('mode',  default_value = 'real',   description = 'OPERATION MODE'   ),
-      DeclareLaunchArgument('model', default_value = 'm1013',     description = 'ROBOT_MODEL'   ),
-      DeclareLaunchArgument('color', default_value = 'white',     description = 'ROBOT_COLOR'   ),
-      DeclareLaunchArgument('loop', default_value = 'True',     description = 'LOOP_SETTING'    ),
-      DeclareLaunchArgument('rviz', default_value = 'true',     description = 'RVIZ'            ),
-      DeclareLaunchArgument('depth_cloud', default_value = 'false', description = 'RVIZ_CONFIGURATION'),
+      DeclareLaunchArgument('name',  default_value = 'dsr01',     description = 'NAME_SPACE'              ),
+      DeclareLaunchArgument('host',  default_value = '127.0.0.1', description = 'ROBOT_IP'                ),
+      DeclareLaunchArgument('port',  default_value = '12345',     description = 'ROBOT_PORT'              ),
+      DeclareLaunchArgument('mode',  default_value = 'virtual',   description = 'OPERATION MODE'          ),
+      DeclareLaunchArgument('model', default_value = 'm1013',     description = 'ROBOT_MODEL'             ),
+      DeclareLaunchArgument('color', default_value = 'white',     description = 'ROBOT_COLOR'             ),
+      DeclareLaunchArgument('loop', default_value = 'True',       description = 'LOOP_SETTING'            ),
+      DeclareLaunchArgument('rviz',  default_value = 'true',      description = 'RVIZ'                    ),
+      DeclareLaunchArgument('depth_cloud', default_value = 'false',     description = 'RVIZ_CONFIGURATION'),
     ]
-
+    
     depth_cloud = LaunchConfiguration('depth_cloud')
     rviz = LaunchConfiguration('rviz')
     xacro_path = os.path.join( get_package_share_directory('dsr_description2'), 'xacro')
@@ -49,7 +49,8 @@ def generate_launch_description():
     depth_config = PathJoinSubstitution(
             [FindPackageShare("sort_seg"), "rviz", "depth_cloud.rviz"]
         ),
-  
+
+
     # Connection parameters
     doosan_connection_node = Node(
         package='sort_seg',
@@ -107,7 +108,6 @@ def generate_launch_description():
     # Camera node
     camera_node = IncludeLaunchDescription(
         PathJoinSubstitution([
-                # FindPackageShare('realsense2_camera'),
                 FindPackageShare('sort_seg'),
                 'launch',
                 'rs_launch.py'
@@ -149,8 +149,8 @@ def generate_launch_description():
         name="static_transform_publisher",
         output="screen",
         arguments=[
-            "0.06069", 
-            "-0.51399", 
+            "0.07446", 
+            "-0.51735", 
             "0", 
             "0", 
             "0", 
@@ -181,17 +181,11 @@ def generate_launch_description():
         condition=IfCondition(PythonExpression(["'", rviz, "' and '", depth_cloud, "'"]))
     )
 
-    # # Communication with robot
-    # connect_test = Node(
-    #     package="sort_seg",
-    #     executable="connect_test"
-    # )
 
     # Communication with robot
     sort_seg = Node(
         package="sort_seg",
-        executable="sort_seg",
-        parameters=[{'loop': LaunchConfiguration('loop')}]
+        executable="sort_seg"
     )
 
 
@@ -216,7 +210,7 @@ def generate_launch_description():
 
     on_spawner_exit = RegisterEventHandler(event_handler=OnProcessExit(
         target_action=robot_controller_spawner,
-        on_exit=[sort_seg] 
+        on_exit=[sort_seg]
     ))
 
     rviz_node = RegisterEventHandler(event_handler=OnProcessExit(
