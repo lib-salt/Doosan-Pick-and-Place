@@ -77,9 +77,41 @@ def quaternion_to_euler(qx, qy, qz, qw):
     node.get_logger().info(f"angle: {yaw}")
     return roll, pitch, yaw
 
+def tip_bin():
+    # Bin and tipping location
+    mid = posx(-85, 533, 680,38, 180, 40)
+    bin_above = posx(-635, -165, 430, 25, 180, -65) # old value: z=540
+    bin = posx(-635, -165, 354, 25, 180, -65) # old value: z=475
+    tip_location = posx(456, 200, 720, 36, 180, 120)
+    tip_bin =  posx(456, 240, 720, 95, 90, -180)
+    tip_shake_1 = posx(456, 240, 720, 95, 90, -135)
+    tip_shake_2 = posx(456, 240, 720, 95, 93, 135)
+    bin_grab = [bin_above, bin]
+    tip = [bin_above, mid, tip_location, tip_bin, tip_shake_1, tip_shake_2, tip_bin, tip_location, mid, bin_above, bin]
+
+    # Redistribute Springs
+    node.get_logger().info('All springs colleccted, Time to make a mess!')
+    # Grab bin
+    for i in bin_grab:
+        movel(i, vel = 140, acc = 85, ra = DR_MV_RA_DUPLICATE)
+        time.sleep(0.5)
+    close_grip()
+
+    # Tip and return bin
+    for i in tip:
+        movel(i, vel = 140, acc = 85, ra = DR_MV_RA_DUPLICATE)
+        time.sleep(0.5)
+    open_grip()
+    movel(bin_above, vel = 140, acc = 85, ra = DR_MV_RA_DUPLICATE)
+    time.sleep(2)
+
+def shutdown():
+    node.get_logger().info('Springs collected, shutiing down')
+    node.destroy_node()
+
 def move(x, y, z, qx, qy, qz, qw):
     # Checks if it hits the table
-    if (z > 280) and (y > 0): # 362
+    if (z > 280) and (y > -185): # 362
         node.get_logger().info(f"moving to {x, y, z}")
 
         # Convert quaternion to Euler angles (roll, pitch, yaw)
@@ -91,30 +123,30 @@ def move(x, y, z, qx, qy, qz, qw):
         mid = posx(-85, 533, 680,roll, 180, yaw + 45)
         above_spring = posx(x, y, z+120, roll, 180, yaw)
         spring = posx(x, y, z, roll, 180, yaw)
-        to_spring_x_pos = [bin, mid, above_spring, spring]
+        to_spring_x_pos = [mid, above_spring, spring]
         to_spring_x_neg = [bin, above_spring, spring]
         to_bin_x_pos = [above_spring, mid, bin]
         to_bin_x_neg = [above_spring, bin]
 
         if x >= 0:
             for i in to_spring_x_pos:
-                movel(i, vel = 100, acc = 65, ra = DR_MV_RA_DUPLICATE)
+                movel(i, vel = 140, acc = 85, ra = DR_MV_RA_DUPLICATE)
                 time.sleep(0.5)
             close_grip()
 
             for i in to_bin_x_pos:
-                movel(i, vel = 100, acc = 65, ra = DR_MV_RA_DUPLICATE)
+                movel(i, vel = 140, acc = 85, ra = DR_MV_RA_DUPLICATE)
                 time.sleep(0.5)
             open_grip()
 
         else:
             for i in to_spring_x_neg:
-                movel(i, vel = 100, acc = 65, ra = DR_MV_RA_DUPLICATE)
+                movel(i, vel = 140, acc = 85, ra = DR_MV_RA_DUPLICATE)
                 time.sleep(0.5)
             close_grip()
 
             for i in to_bin_x_neg:
-                movel(i, vel = 100, acc = 65, ra = DR_MV_RA_DUPLICATE)
+                movel(i, vel = 140, acc = 85, ra = DR_MV_RA_DUPLICATE)
                 time.sleep(0.5)
             open_grip()
 
@@ -122,39 +154,22 @@ def move(x, y, z, qx, qy, qz, qw):
         node.get_logger().info('HITS TABLE OR OUT OF BOUNDS!')
 
 def check_msg_time():
+    # Checks if the last spring location received was more than 10 seconds ago 
     message_time = node.last_message_time
     current_time = node.get_clock().now()
-
     if (current_time - message_time).nanoseconds > 10e9:  # 10 seconds
-        # Bin and tipping location
-        mid = posx(-85, 533, 680,38, 180, 40)
-        bin_above = posx(-635, -165, 430, 25, 180, -65) # old value: z=540
-        bin = posx(-635, -165, 354, 25, 180, -65) # old value: z=475
-        tip_location = posx(456, -2, 720, 36, 180, 120)
-        tip_bin =  posx(456, 10, 720, 95, 90, -180)
-        tip_shake_1 = posx(456, 10, 720, 95, 90, -135)
-        tip_shake_2 = posx(456, 10, 720, 95, 93, 135)
-        bin_grab = [bin_above, bin]
-        tip = [bin_above, mid, tip_location, tip_bin, tip_shake_1, tip_shake_2, tip_bin, tip_location, mid, bin_above, bin]
-        # Redistribute Springs
-        node.get_logger().info('All springs colleccted, Time to make a mess!')
-        # Grab bin
-        for i in bin_grab:
-            movel(i, vel = 100, acc = 65, ra = DR_MV_RA_DUPLICATE)
-            time.sleep(0.5)
-        close_grip()
-        # Tip and return bin
-        for i in tip:
-            movel(i, vel = 100, acc = 65, ra = DR_MV_RA_DUPLICATE)
-            time.sleep(0.5)
-        open_grip()
-        movel(bin_above, vel = 100, acc = 65, ra = DR_MV_RA_DUPLICATE)
-        time.sleep(2)
+        node.loop = node.get_parameter('loop').get_parameter_value().bool_value
+
+        if node.loop:
+            tip_bin()
+        else:
+            shutdown()
 
 ######################### M A I N ###############################
 
 def main():
     rclpy.spin_once(node)
+    node.declare_parameter('loop', True)  
 
     while rclpy.ok():
         # Check if any springs are being detected 
