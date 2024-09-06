@@ -18,7 +18,7 @@ def generate_launch_description():
       DeclareLaunchArgument('mode',  default_value = 'virtual',   description = 'OPERATION MODE'          ),
       DeclareLaunchArgument('model', default_value = 'm1013',     description = 'ROBOT_MODEL'             ),
       DeclareLaunchArgument('color', default_value = 'white',     description = 'ROBOT_COLOR'             ),
-      DeclareLaunchArgument('loop', default_value = 'True',       description = 'LOOP_SETTING'            ),
+      DeclareLaunchArgument('loop',  default_value = 'true',      description = 'LOOP_SETTING'            ),
       DeclareLaunchArgument('rviz',  default_value = 'true',      description = 'RVIZ'                    ),
       DeclareLaunchArgument('depth_cloud', default_value = 'false',     description = 'RVIZ_CONFIGURATION'),
     ]

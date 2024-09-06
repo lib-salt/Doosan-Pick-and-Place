@@ -18,8 +18,8 @@ def generate_launch_description():
       DeclareLaunchArgument('mode',  default_value = 'real',   description = 'OPERATION MODE'   ),
       DeclareLaunchArgument('model', default_value = 'm1013',     description = 'ROBOT_MODEL'   ),
       DeclareLaunchArgument('color', default_value = 'white',     description = 'ROBOT_COLOR'   ),
-      DeclareLaunchArgument('loop', default_value = 'True',     description = 'LOOP_SETTING'    ),
-      DeclareLaunchArgument('rviz', default_value = 'true',     description = 'RVIZ'            ),
+      DeclareLaunchArgument('loop',  default_value = 'true',     description = 'LOOP_SETTING'   ),
+      DeclareLaunchArgument('rviz',  default_value = 'true',     description = 'RVIZ'           ),
       DeclareLaunchArgument('depth_cloud', default_value = 'false', description = 'RVIZ_CONFIGURATION'),
     ]
 
@@ -149,7 +149,7 @@ def generate_launch_description():
         name="static_transform_publisher",
         output="screen",
         arguments=[
-            "0.06069", 
+            "0.05969", # 0.06069
             "-0.51399", 
             "0", 
             "0", 
