@@ -158,13 +158,3 @@ https://github.com/BrettRD/onrobot_grippers (OnRobot gripper ROS2)
 https://github.com/pal-robotics/aruco_ros (Aruco Markers ROS)
 
 https://github.com/IntelRealSense/realsense-ros (Intel Realsense ROS)
-
-
-
-
-
-
-
-
-
-
