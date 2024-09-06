@@ -3,6 +3,7 @@
 ## Overview
 
 The main aim of the project was to separate coloured springs from a pile of rubbish, using the M1013 Doosan Robot Arm with the OnRobot RG6 gripper and the Intel Realsense D455 Camera. This package contains functions to simulate and control the M1013 Doosan Robot and D455 Camera in ROS2 Humble. The OnRobot RG6 gripper can be visualized however the drivers lack functionality, but can be controlled through the Doosan's digital outputs.
+___
 
 ## Physical Environment Setup:
 
@@ -23,7 +24,7 @@ The main aim of the project was to separate coloured springs from a pile of rubb
 ### Aruco Markers:
 - Print off the aruco marker given in the github
 - Place the Aruco marker in the environment ensuring it is visible to the camera.
-
+___
 
 ## ROS Workspace Setup:
 ***This ROS2 Package is implemented at ROS2-humble.***
@@ -50,8 +51,30 @@ $ cd ~/ros2_ws
 $ colcon build
 $ . install/setup.bash
 ```
+___
 
 ## Launch: 
+
+### Launching the Sort Segregate Programme:
+To launch the Sort and Segregate spring task use:
+
+```
+ros2 launch sort_seg sort_seg.launch.py
+```
+> ### __arguments__
+ >host:= ROBOT_IP default = 192.168.1.100
+  port:= ROBOT_PORT default = 12345  
+  mode:= OPERATION_MODE <virtual / real> default = real  
+  color:= ROBOT_COLOR <white / blue> default = white  
+  loop:= LOOP_SETTING <true / false> default = true  
+  rviz:= RVIZ <true / false> default = true  
+  depth_cloud:= RVIZ_CONFIGURATION <true / false> = false  
+
+>  __for visualisation without moving the robot set:__  
+  >host:= 127.0.0.1  
+   mode:= virtual
+___
+
 
 ### Doosan Simulation:
 To launch a basic simulation of the doosan robot can be done by running the following command:
@@ -69,7 +92,7 @@ Allow for visualisation of the robot and gripper in rviz:
 ```
 ros2 launch m1013_moveit_config start.launch.py color:=blue
 ```
-
+___
 
 ### Camera Node:
 To launch just the camera node run the following command:
@@ -88,7 +111,7 @@ Alternatively you can use another image viewer:
 rqt
 ```
 Then navigate to Plugins > Visualisation > Image View and select the relevant topic to check for output.
-
+___
 
 ### Aruco Markers Visualisation:
 To start tracking the marker and publish its pose in the camera frame run the following command:
@@ -100,14 +123,7 @@ Allow for visualisation of the aruco marker and it's pose in the camera frame:
 ```
 ros2 run image-view image-view --ros-args --remap image:=/aruco_quadruple/result
 ```
-
-
-### Launching the Sort Segregate Programme:
-To launch the Sort and Segregate spring task use:
-
-```
-ros2 launch sort_seg sort_seg.launch.py
-```
+___
 
 ### Visualising the Whole Setup
 Allow for visualisation of the entire setup through RViz2:
