@@ -1,6 +1,6 @@
 import os
 from launch import LaunchDescription
-from launch.conditions import IfCondition, UnlessCondition
+from launch.conditions import IfCondition
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, RegisterEventHandler, TimerAction, Shutdown
 from launch.event_handlers import OnProcessStart, OnProcessExit
 from launch.substitutions import Command, FindExecutable, PathJoinSubstitution, LaunchConfiguration, PythonExpression
@@ -107,7 +107,6 @@ def generate_launch_description():
     # Camera node
     camera_node = IncludeLaunchDescription(
         PathJoinSubstitution([
-                # FindPackageShare('realsense2_camera'),
                 FindPackageShare('sort_seg'),
                 'launch',
                 'rs_launch.py'
@@ -150,7 +149,7 @@ def generate_launch_description():
         output="screen",
         arguments=[
             "0.05969", # 0.06069
-            "-0.51399", 
+            "-0.51299", # -0.51399
             "0", 
             "0", 
             "0", 
@@ -168,7 +167,7 @@ def generate_launch_description():
         name="rviz2",
         output="log",
         arguments=["-d", default_config],
-        condition=UnlessCondition(PythonExpression(["'", rviz, "' and not '", depth_cloud, "'"]))
+        condition=IfCondition(PythonExpression(["'", rviz, "' and not '", depth_cloud, "'"]))
     )
 
     rviz_depth_cloud = Node(
@@ -219,10 +218,10 @@ def generate_launch_description():
         on_exit=[sort_seg] 
     ))
 
-    rviz_node = RegisterEventHandler(event_handler=OnProcessExit(
-        target_action=robot_controller_spawner,
-        on_exit=[rviz_default, rviz_depth_cloud]
-    ))
+    # rviz_node = RegisterEventHandler(event_handler=OnProcessExit(
+    #     target_action=robot_controller_spawner,
+    #     on_exit=[rviz_default, rviz_depth_cloud]
+    # ))
 
     on_sort_seg_exit = RegisterEventHandler(event_handler=OnProcessExit(
         target_action=sort_seg,
@@ -237,7 +236,9 @@ def generate_launch_description():
         camera_node,
         aruco_quadruple,
         image_view_node,
-        rviz_node,
+        # rviz_node,
+        rviz_default,
+        rviz_depth_cloud,
         on_image_viewer_start,
         on_cam_map_start,
         on_broadcaster_exit,
