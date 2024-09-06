@@ -8,10 +8,7 @@ import time
 import sys
 import os
 import rclpy
-import math
 from scipy.spatial.transform import Rotation as R
-import numpy as np
-from pynput import keyboard
 imp_path=os.path.abspath(os.path.join(os.path.abspath(__file__),"../../../../../../../src/Sort-and-Segregate/common2/imp"))
 sys.path.append((imp_path))
 import DR_init
@@ -54,7 +51,10 @@ def get_coords():
     if node.z < 0.02:
         z = 285 # old value: 380
     else:
-        z = 276 + (node.z *1000.0) # height of  gripper # old value: 369
+        if x >=0: # Acounts on slight variation bettween two sides of the table
+            z = 268 + (node.z *1000.0)
+        else:
+            z = 278 + (node.z *1000.0) # height of  gripper # old value: 369
     # node.get_logger().info(f"Received coordinates: x={x}, y={y}, z={z}")
 
     qx = node.orientation.x
