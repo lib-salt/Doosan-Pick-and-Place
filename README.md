@@ -68,11 +68,16 @@ ros2 launch sort_seg sort_seg.launch.py
   color:= ROBOT_COLOR <white / blue> default = white  
   loop:= LOOP_SETTING <true / false> default = true  
   rviz:= RVIZ <true / false> default = true  
-  depth_cloud:= RVIZ_CONFIGURATION <true / false> = false  
+  depth_cloud:= RVIZ_CONFIGURATION <true / false> = false
 
 >  __for visualisation without moving the robot set:__  
   >host:= 127.0.0.1  
    mode:= virtual
+
+To launch the spring task so it only loops once and rviz adds the depth cloud topic:  
+```
+ros2 launch sort_seg sort_seg.launch.py loop:=false depth_cloud:=true
+```
 ___
 
 
