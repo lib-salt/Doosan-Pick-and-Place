@@ -167,7 +167,7 @@ def generate_launch_description():
         name="rviz2",
         output="log",
         arguments=["-d", default_config],
-        condition=IfCondition(PythonExpression(["'", rviz, "' and not '", depth_cloud, "'"]))
+        condition=IfCondition(PythonExpression(["'", rviz, "' == 'true' and '", depth_cloud, "' == 'false'"]))
     )
 
     rviz_depth_cloud = Node(
@@ -177,14 +177,8 @@ def generate_launch_description():
         name="rviz2",
         output="log",
         arguments=["-d", depth_config],
-        condition=IfCondition(PythonExpression(["'", rviz, "' and '", depth_cloud, "'"]))
+        condition=IfCondition(PythonExpression(["'", rviz, "' == 'true' and '", depth_cloud, "' == 'true'"]))
     )
-
-    # # Communication with robot
-    # connect_test = Node(
-    #     package="sort_seg",
-    #     executable="connect_test"
-    # )
 
     # Communication with robot
     sort_seg = Node(
