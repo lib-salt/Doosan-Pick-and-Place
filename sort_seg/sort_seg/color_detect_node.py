@@ -76,11 +76,23 @@ class ColorDetectNode(Node):
         # Convert color image from BGR to HSV
         hsv_image = cv2.cvtColor(color_image, cv2.COLOR_BGR2HSV)
 
-        lower_limit = np.array([58, 183, 67])
+        # lower_limit = np.array([58, 183, 67])
+        # upper_limit = np.array([92, 255, 255])
+
+        lower_limit = np.array([58, 92, 67])
         upper_limit = np.array([92, 255, 255])
 
         mask = cv2.inRange(hsv_image, lower_limit, upper_limit)
-        
+
+        # Adaptive Thresholding (adjust parameters as needed)
+        # mask = cv2.adaptiveThreshold(mask, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 81, -20)
+
+        # Morphological operations (adjust kernel size as needed)
+        # kernel = np.ones((5, 5), np.uint8) 
+        # mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel) # Opening: erosion followed by dilation
+        # mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel) # Closing: dilation followed by erosion
+
+
         # Find contours in the mask
         contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
@@ -109,7 +121,7 @@ class ColorDetectNode(Node):
             elif orientation_angle < -90:
                 orientation_angle += 180
 
-            if 0 < area <= 1500:    # refine boundaries
+            if 10 < area <= 500:    # refine boundaries
                 cv2.drawContours(color_image, [box], 0, (255, 0, 0), 2)
 
                 center_x = rect[0][0]
@@ -171,6 +183,7 @@ class ColorDetectNode(Node):
 
         # Display the color image with bounding boxes
         cv2.imshow('Color Image', color_image)
+        # cv2.imshow('mask', mask)
         cv2.waitKey(1)
 
 
