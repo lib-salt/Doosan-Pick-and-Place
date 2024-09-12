@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
-  <xacro:macro name="onrobot_rg6_base_link" params="prefix">
+  <xacro:macro name="onrobot_rg6_base_link" params="prefix"
     <link name="${prefix}onrobot_rg6_base_link">
       <inertial>
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
@@ -10,7 +10,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://onrobot_rg_description/meshes/rg6/visual/base_link.stl" />
+          <mesh filename="package://dsr_description2/meshes/rg6/visual/base_link.stl" /
         </geometry>
         <material name="">
           <color rgba="0.8 0.8 0.8 1" />
@@ -18,8 +18,8 @@
       </visual>
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
-        <geometry>
-          <mesh filename="package://onrobot_rg_description/meshes/rg6/collision/base_link.stl" />
+        <geometry
+          <mesh filename="package://dsr_description2/meshes/rg6/collision/base_link.stl" />
         </geometry>
       </collision>
     </link>
