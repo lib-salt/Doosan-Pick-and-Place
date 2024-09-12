@@ -31,7 +31,7 @@ def print_launch_configuration_value(context, *args, **kwargs):
 
 def generate_launch_description():
     ARGUMENTS =[ 
-        DeclareLaunchArgument('name',  default_value = '',     description = 'NAME_SPACE'     ),
+        DeclareLaunchArgument('name',  default_value = 'dsr01',     description = 'NAME_SPACE'     ),
         DeclareLaunchArgument('host',  default_value = '192.168.137.100', description = 'ROBOT_IP'       ),
         DeclareLaunchArgument('port',  default_value = '12345',     description = 'ROBOT_PORT'     ),
         DeclareLaunchArgument('mode',  default_value = 'real',   description = 'OPERATION MODE' ),
@@ -92,21 +92,11 @@ def generate_launch_description():
     control_node = Node(
         package="controller_manager",
         executable="ros2_control_node",
-        # namespace=LaunchConfiguration('name'),
+        namespace=LaunchConfiguration('name'),
         parameters=[robot_description, robot_controllers],
         output="both",
     )
-    robot_state_pub_node = Node(
-        package='robot_state_publisher',
-        executable='robot_state_publisher',
-        name='robot_state_publisher',
-        namespace=LaunchConfiguration('name'),
-        output='both',
-        parameters=[{
-        'robot_description': Command(['xacro', ' ', xacro_path, '/', LaunchConfiguration('model'), '.urdf.xacro color:=', LaunchConfiguration('color')])           
-    }])
-    
-
+##########################
     moveit_config = (
         MoveItConfigsBuilder("m1013")
         .robot_description(file_path="config/m1013.urdf.xacro")
@@ -114,6 +104,27 @@ def generate_launch_description():
         .trajectory_execution(file_path="config/moveit_controllers.yaml")
         .to_moveit_configs()
     )
+#############################
+    robot_state_pub_node = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        name='robot_state_publisher',
+        namespace=LaunchConfiguration('name'),
+        output='both',
+    #     parameters=[{
+    #     'robot_description': Command(['xacro', ' ', xacro_path, '/', LaunchConfiguration('model'), '.urdf.xacro color:=', LaunchConfiguration('color')])           
+    # }]
+        parameters=[moveit_config.robot_description],
+    )
+    
+
+    # moveit_config = (
+    #     MoveItConfigsBuilder("m1013")
+    #     .robot_description(file_path="config/m1013.urdf.xacro")
+    #     .robot_description_semantic(file_path="config/dsr.srdf")
+    #     .trajectory_execution(file_path="config/moveit_controllers.yaml")
+    #     .to_moveit_configs()
+    # )
 
     # Start the actual move_group node/action server
     run_move_group_node = Node(
@@ -145,7 +156,7 @@ def generate_launch_description():
 
     joint_state_broadcaster_spawner = Node(
         package="controller_manager",
-        # namespace=LaunchConfiguration('name'),
+        namespace=LaunchConfiguration('name'),
         executable="spawner",
         arguments=["joint_state_broadcaster", "--controller-manager", "/controller_manager"],
     )
@@ -159,7 +170,7 @@ def generate_launch_description():
     
     joint_trajectory_controller_spawner = Node(
         package="controller_manager",
-        # namespace=LaunchConfiguration('name'),
+        namespace=LaunchConfiguration('name'),
         executable="spawner",
         arguments=["dsr_joint_trajectory", "-c", "/controller_manager"],
     )
@@ -196,6 +207,7 @@ def generate_launch_description():
         control_node,
         robot_state_pub_node,
         robot_controller_spawner,
+        run_move_group_node,
         dsr_moveit_controller_spawner,
         delay_rviz_after_joint_state_broadcaster_spawner,
         delay_robot_controller_spawner_after_joint_state_broadcaster_spawner,
