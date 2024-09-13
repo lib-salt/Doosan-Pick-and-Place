@@ -31,7 +31,7 @@ ___
 
 ### Installation:
 ```
-### Prerequisites to installat before installing the package
+### Prerequisites to install before installing the package
 $ sudo apt install ros-humble-librealsense2*
 $ sudo apt install ros-humble-realsense2-*
 $ sudo apt install ros-humble-aruco
