@@ -11,11 +11,11 @@
         <inertia ixx="1.0E-03" ixy="1.0E-06" ixz="1.0E-06" iyy="1.0E-03" iyz="1.0E-06" izz="1.0E-03" />
       </inertial>
       <visual>
-        <origin xyz="0 0 0" rpy="0 0 0" /
+        <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
           <mesh filename="package://dsr_description2/meshes/rg6/collision/outer_knuckle.stl" />
         </geometry>
-        <material name=""
+        <material name="">
           <color rgba="0.8 0.8 0.8 1" />
         </material>
       </visual>
@@ -23,7 +23,7 @@
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
           <mesh filename="package://dsr_description2/meshes/rg6/collision/outer_knuckle.stl" />
-        </geometry
+        </geometry>
       </collision>
     </link>
 
@@ -35,7 +35,7 @@
     </gazebo>
   </xacro:macro>
 
-  <xacro:macro name="inner_knuckle" params="prefix fingerprefix"
+  <xacro:macro name="inner_knuckle" params="prefix fingerprefix">
     <link name="${prefix}${fingerprefix}_inner_knuckle">
       <inertial>
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
@@ -68,21 +68,21 @@
 
   <xacro:macro name="inner_finger" params="prefix fingerprefix">
     <link name="${prefix}${fingerprefix}_inner_finger">
-      <inertial
+      <inertial>
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
-        <mass value="0.05" /
+        <mass value="0.05" />
         <inertia ixx="1.0E-03" ixy="1.0E-06" ixz="1.0E-06" iyy="1.0E-03" iyz="1.0E-06" izz="1.0E-03" />
-      </inertial
+      </inertial>
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://dsr_description2/meshes/rg6/visual/inner_finger.stl" /
+          <mesh filename="package://dsr_description2/meshes/rg6/visual/inner_finger.stl" />
         </geometry>
-        <material name=""
-          <color rgba="0.1 0.1 0.1 1" /
+        <material name="">
+          <color rgba="0.1 0.1 0.1 1" />
         </material>
       </visual>
-      <collision
+      <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
           <mesh filename="package://dsr_description2/meshes/rg6/collision/inner_finger.stl" />
@@ -90,7 +90,7 @@
       </collision>
     </link>
 
-    <gazebo reference="${prefix}${fingerprefix}_inner_finger"
+    <gazebo reference="${prefix}${fingerprefix}_inner_finger">
       <kp>1000000.0</kp>
       <kd>1.0</kd>
       <mu1>1.0</mu1>
@@ -131,7 +131,7 @@
       <parent link="${prefix}onrobot_rg6_base_link" />
       <child link="${prefix}left_outer_knuckle" />
       <axis xyz="-1 0 0" />
-      <limit lower="-0.628319" upper="0.628319" velocity="2.0" effort="1000" /
+      <limit lower="-0.628319" upper="0.628319" velocity="2.0" effort="1000" />
     </joint>
     <xacro:finger_joints prefix="${prefix}" fingerprefix="left" reflect="1.0"/>
   </xacro:macro>
