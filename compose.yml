@@ -1,0 +1,78 @@
+services:
+  sort_seg_loop:
+    image: sort_and_segregate
+    command: >
+      bash -c
+      "source /ros2_ws/install/setup.bash &&
+      ros2 launch sort_seg sort_seg.launch.py"
+    privileged: true
+    network_mode: host
+    ipc: host
+    pid: host
+    devices:
+    - /dev/:/dev/
+
+  sort_seg_once:
+    image: sort_and_segregate
+    command: >
+      bash -c
+      "source /ros2_ws/install/setup.bash &&
+      ros2 launch sort_seg sort_seg.launch.py loop:=false"
+    privileged: true
+    network_mode: host
+    ipc: host
+    pid: host
+    devices:
+    - /dev/:/dev/
+
+  sort_seg_loop_and_depth_cloud:
+    image: sort_and_segregate
+    command: >
+      bash -c
+      "source /ros2_ws/install/setup.bash &&
+      ros2 launch sort_seg sort_seg.launch.py depth_cloud:=true"
+    privileged: true
+    network_mode: host
+    ipc: host
+    pid: host
+    devices:
+    - /dev/:/dev/
+
+  sort_seg_once_and_depth_cloud:
+    image: sort_and_segregate
+    command: >
+      bash -c
+      "source /ros2_ws/install/setup.bash &&
+      ros2 launch sort_seg sort_seg.launch.py loop:=false depth_cloud:=true"
+    privileged: true
+    network_mode: host
+    ipc: host
+    pid: host
+    devices:
+    - /dev/:/dev/
+
+  sort_seg_loop_no_rviz:
+    image: sort_and_segregate
+    command: >
+      bash -c
+      "source /ros2_ws/install/setup.bash &&
+      ros2 launch sort_seg sort_seg.launch.py rviz:=false"
+    privileged: true
+    network_mode: host
+    ipc: host
+    pid: host
+    devices:
+    - /dev/:/dev/
+
+  sort_seg_once_no_rviz:
+    image: sort_and_segregate
+    command: >
+      bash -c
+      "source /ros2_ws/install/setup.bash &&
+      ros2 launch sort_seg sort_seg.launch.py loop:=false rviz:=false"
+    privileged: true
+    network_mode: host
+    ipc: host
+    pid: host
+    devices:
+    - /dev/:/dev/
