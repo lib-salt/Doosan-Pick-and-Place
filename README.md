@@ -37,8 +37,29 @@ $ sudo apt install ros-humble-realsense2-*
 $ sudo apt install ros-humble-aruco
 $ sudo apt install ros-humble-image-view
 $ sudo apt install ros-humble-ros2-control
-$ sudo apt-get install libpoco-dev libyaml-cpp-dev
-$ sudo apt-get install ros-humble-control-msgs ros-humble-realtime-tools ros-humble-xacro ros-humble-joint-state-publisher-gui ros-humble-ros2-control ros-humble-ros2-controllers ros-humble-gazebo-msgs ros-humble-moveit-msgs dbus-x11
+$ sudo apt-get install -y libpoco-dev libyaml-cpp-dev
+sudo apt-get install -y ros-humble-control-msgs ros-humble-realtime-tools ros-humble-xacro ros-humble-joint-state-publisher-gui ros-humble-ros2-control ros-humble-ros2-controllers ros-humble-gazebo-msgs ros-humble-moveit-msgs dbus-x11 ros-humble-moveit-configs-utils ros-humble-moveit-ros-move-group
+
+### install gazebo sim
+sudo sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list'
+wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
+sudo apt-get update
+sudo apt-get install -y libignition-gazebo6-dev
+sudo apt-get install -y ros-humble-gazebo-ros-pkgs ros-humble-moveit-msgs ros-humble-ros-gz-sim
+
+### We assume that you have installed the ros-humble-desktop package using the apt-get command.
+### We recommand the /home/<user_home>/ros2_ws/src
+mkdir -p ~/ros2_ws/src
+cd ~/ros2_ws/src
+git clone -b humble-devel https://github.com/doosan-robotics/doosan-robot2.git
+git clone -b humble https://github.com/ros-controls/gz_ros2_control
+rosdep install -r --from-paths ./gz_ros2_control --ignore-src --rosdistro $ROS_DISTRO -y
+cd doosan-robot2 && ./install_emulator.sh
+cd ~/ros2_ws
+colcon build
+. install/setup.bash
+
+
 
 ### Recommended to use the /home/<user>/ros2_ws/src
 $ mkdir -p ~/ros2_ws/src
