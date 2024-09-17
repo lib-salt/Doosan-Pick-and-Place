@@ -96,6 +96,15 @@ def generate_launch_description():
         parameters=[robot_description, robot_controllers],
         output="both",
     )
+
+    moveit_config = (
+        MoveItConfigsBuilder("m1013")
+        .robot_description(file_path="config/m1013.urdf.xacro")
+        .robot_description_semantic(file_path="config/dsr.srdf")
+        .trajectory_execution(file_path="config/moveit_controllers.yaml")
+        .to_moveit_configs()
+    )
+    
     robot_state_pub_node = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
@@ -105,15 +114,6 @@ def generate_launch_description():
         parameters=[{
         'robot_description': Command(['xacro', ' ', xacro_path, '/', LaunchConfiguration('model'), '.urdf.xacro color:=', LaunchConfiguration('color')])           
     }])
-    
-
-    moveit_config = (
-        MoveItConfigsBuilder("m1013")
-        .robot_description(file_path="config/m1013.urdf.xacro")
-        .robot_description_semantic(file_path="config/dsr.srdf")
-        .trajectory_execution(file_path="config/moveit_controllers.yaml")
-        .to_moveit_configs()
-    )
 
     # Start the actual move_group node/action server
     run_move_group_node = Node(
@@ -154,14 +154,14 @@ def generate_launch_description():
         package="controller_manager",
         namespace=LaunchConfiguration('name'),
         executable="spawner",
-        arguments=["dsr_controller2", "-c", "/controller_manager"],
+        arguments=["dsr_controller2", "-c", "controller_manager"],
     )
     
     joint_trajectory_controller_spawner = Node(
         package="controller_manager",
         # namespace=LaunchConfiguration('name'),
         executable="spawner",
-        arguments=["dsr_joint_trajectory", "-c", "/controller_manager"],
+        arguments=["dsr_joint_trajectory", "-c", "controller_manager"],
     )
 
     dsr_moveit_controller_spawner = Node(
@@ -195,7 +195,9 @@ def generate_launch_description():
         connection_node,
         control_node,
         robot_state_pub_node,
-        robot_controller_spawner,
+        run_move_group_node,
+        # robot_controller_spawner,
+        joint_state_broadcaster_spawner,
         dsr_moveit_controller_spawner,
         delay_rviz_after_joint_state_broadcaster_spawner,
         delay_robot_controller_spawner_after_joint_state_broadcaster_spawner,
