@@ -38,3 +38,8 @@ joint_limits:
     max_velocity: 10.47
     has_acceleration_limits: true
     max_acceleration: 2.094
+  finger_joint:
+    has_velocity_limits: true
+    max_velocity: 6.98
+    has_acceleration_limits: true
+    max_acceleration: 1.396
