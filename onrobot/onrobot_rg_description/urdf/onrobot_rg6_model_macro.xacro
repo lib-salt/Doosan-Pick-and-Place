@@ -13,7 +13,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://onrobot_rg_description/meshes/rg6/visual/outer_knuckle.stl" />
+          <mesh filename="package://dsr_description2/meshes/rg6/visual/outer_knuckle.stl" />
         </geometry>
         <material name="">
           <color rgba="0.8 0.8 0.8 1" />
@@ -22,7 +22,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://onrobot_rg_description/meshes/rg6/collision/outer_knuckle.stl" />
+          <mesh filename="package://dsr_description2/meshes/rg6/collision/outer_knuckle.stl" />
         </geometry>
       </collision>
     </link>
@@ -45,7 +45,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://onrobot_rg_description/meshes/rg6/visual/inner_knuckle.stl" />
+          <mesh filename="package://dsr_description2/meshes/rg6/visual/inner_knuckle.stl" />
         </geometry>
         <material name="">
           <color rgba="0.8 0.8 0.8 1" />
@@ -54,7 +54,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://onrobot_rg_description/meshes/rg6/collision/inner_knuckle.stl" />
+          <mesh filename="package://dsr_description2/meshes/rg6/collision/inner_knuckle.stl" />
         </geometry>
       </collision>
     </link>
@@ -77,7 +77,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://onrobot_rg_description/meshes/rg6/visual/inner_finger.stl" />
+          <mesh filename="package://dsr_description2/meshes/rg6/visual/inner_finger.stl" />
         </geometry>
         <material name="">
           <color rgba="0.1 0.1 0.1 1" />
@@ -86,7 +86,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://onrobot_rg_description/meshes/rg6/collision/inner_finger.stl" />
+          <mesh filename="package://dsr_description2/meshes/rg6/collision/inner_finger.stl" />
         </geometry>
       </collision>
     </link>
