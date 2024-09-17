@@ -34,4 +34,19 @@
     <disable_collisions link1="link_3" link2="link_6" reason="Never" />
     <disable_collisions link1="link_4" link2="link_5" reason="Adjacent" />
     <disable_collisions link1="link_5" link2="link_6" reason="Adjacent" />
+    <!--GRIPPER-->
+    <disable_collisions link1="link_6" link2="onrobot_rg6_base_link" reason="Adjacent" />
+    <disable_collisions link1="onrobot_rg6_base_link" link2="left_outer_knuckle" reason="Adjacent" />
+    <disable_collisions link1="onrobot_rg6_base_link" link2="right_outer_knuckle" reason="Adjacent" />
+    <disable_collisions link1="onrobot_rg6_base_link" link2="left_inner_knuckle" reason="Adjacent" />
+    <disable_collisions link1="onrobot_rg6_base_link" link2="right_inner_knuckle" reason="Adjacent" />
+    <disable_collisions link1="onrobot_rg6_base_link" link2="left_inner_finger" reason="Never" />
+    <disable_collisions link1="onrobot_rg6_base_link" link2="right_inner_finger" reason="Never" />
+    <!--KNUCKLE LINKS-->
+    <disable_collisions link1="left_outer_knuckle" link2="left_inner_finger" reason="Adjacent" />
+    <disable_collisions link1="right_outer_knuckle" link2="right_inner_finger" reason="Adjacent" />
+    <disable_collisions link1="left_inner_knuckle" link2="left_inner_finger" reason="Adjacent" />
+    <disable_collisions link1="right_inner_knuckle" link2="right_inner_finger" reason="Adjacent" />
+    <!--FINGER LINKS-->
+    <disable_collisions link1="left_inner_finger" link2="right_inner_finger" reason="Adjacent" />
 </robot>
