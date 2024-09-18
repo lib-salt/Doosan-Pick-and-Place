@@ -47,25 +47,12 @@ sudo apt-get update
 sudo apt-get install -y libignition-gazebo6-dev
 sudo apt-get install -y ros-humble-gazebo-ros-pkgs ros-humble-moveit-msgs ros-humble-ros-gz-sim
 
-### We assume that you have installed the ros-humble-desktop package using the apt-get command.
-### We recommand the /home/<user_home>/ros2_ws/src
-mkdir -p ~/ros2_ws/src
-cd ~/ros2_ws/src
-git clone -b humble-devel https://github.com/doosan-robotics/doosan-robot2.git
-git clone -b humble https://github.com/ros-controls/gz_ros2_control
-rosdep install -r --from-paths ./gz_ros2_control --ignore-src --rosdistro $ROS_DISTRO -y
-cd doosan-robot2 && ./install_emulator.sh
-cd ~/ros2_ws
-colcon build
-. install/setup.bash
-
-
 
 ### Recommended to use the /home/<user>/ros2_ws/src
 $ mkdir -p ~/ros2_ws/src
 $ cd ~/ros2_ws/src
 $ git clone -b sort_seg https://github.com/lib-salt/Sort-and-Segregate
-$ rosdep install -r --from-paths . --ignore-src --rosdistro $ROS_DISTRO -y
+$ rosdep install -r --from-paths ./gz_ros2_control --ignore-src --rosdistro $ROS_DISTRO -y
 $ cd src/Sort-and-Segregate
 $ ./install_emulator.sh
 $ cd ~/ros2_ws
