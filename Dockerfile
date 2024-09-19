@@ -7,13 +7,6 @@ ENV ROS_DISTRO=${ROS_DISTRO}
 # Change the default shell to Bash
 SHELL [ "/bin/bash", "-c" ]
 
-# Install wget
-# RUN apt update && apt-get install -y -qq --no-install-recommends wget
-
-# # Add Gazebo repository and signing key
-# RUN wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
-# RUN echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list
-
 # Install necessary / useful debians
 RUN apt update \
   && apt-get install -y -qq --no-install-recommends \
@@ -23,10 +16,13 @@ RUN apt update \
     vim \ 
     iputils-ping \
     libpoco-dev \
+    liburdfdom-tools \
     libyaml-cpp-dev \
     usbutils \
     python3-pip \
-    # libignition-gazebo6-dev \
+    libignition-gazebo6-dev \
+    ros-$ROS_DISTRO-ament-cmake \
+    ros-$ROS_DISTRO-ament-cmake-python \
     ros-$ROS_DISTRO-ament-lint \
     ros-$ROS_DISTRO-aruco \
     ros-$ROS_DISTRO-control-msgs \
@@ -35,8 +31,9 @@ RUN apt update \
     ros-$ROS_DISTRO-foxglove-bridge \
     ros-$ROS_DISTRO-gazebo-msgs \
     ros-$ROS_DISTRO-gazebo-ros-pkgs \
-    # ros-$ROS_DISTRO-gz-sim \
+    ros-$ROS_DISTRO-gazebo-ros2-control \
     ros-$ROS_DISTRO-hardware-interface \
+    ros-$ROS_DISTRO-hardware-interface-testing \
     ros-$ROS_DISTRO-ign-ros2-control \
     ros-$ROS_DISTRO-image-transport-plugins \
     ros-$ROS_DISTRO-image-view \
@@ -57,7 +54,7 @@ RUN apt update \
     ros-$ROS_DISTRO-rmw-cyclonedds-cpp \
     ros-$ROS_DISTRO-robot-localization \
     ros-$ROS_DISTRO-ros-gz* \
-    ros-$ROS_DISTRO-ros2-control \
+    ros-$ROS_DISTRO-ros2-control* \
     ros-$ROS_DISTRO-ros2-controllers \
     ros-$ROS_DISTRO-rosbag2-storage-mcap* \
     ros-$ROS_DISTRO-rosbridge-msgs \
@@ -74,6 +71,8 @@ RUN apt update \
     ros-$ROS_DISTRO-diagnostic-updater \
 && rm -rf /var/lib/apt/lists/*
 
+RUN pip install pyrealsense2
+
 # Git LFS
 RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash \
   && apt update \
@@ -87,24 +86,23 @@ ENV NVIDIA_VISIBLE_DEVICES \
 ENV NVIDIA_DRIVER_CAPABILITIES \
     ${NVIDIA_DRIVER_CAPABILITIES:+$NVIDIA_DRIVER_CAPABILITIES,}graphics, utility, compute
 
-RUN echo 'source /opt/ros/humble/setup.bash' >> ~/.bashrc
-
 # Create a workspace and copy the Sort-and-Segregate packages into it
 RUN mkdir -p /ros2_ws/src
 COPY ./Sort-and-Segregate /ros2_ws/src
 
 # Create User ROS workspace
-RUN cd /ros2_ws/src \
-    && source /opt/ros/humble/setup.bash 
-RUN rosdep install -r --from-paths . --ignore-src --rosdistro $ROS_DISTRO -y \
-    # cd /Sort-and-Segregate \
-    && ./install_emulator.sh \
-    && cd /ros2_ws \
-    && colcon build --cmake-force-configure \
-    && ros2 daemon stop \
-    && ros2 daemon start \
-    && source /ros2/install/setup.bash
+RUN source /opt/ros/humble/setup.bash \
+  && cd /ros2_ws/src \
+#   && chmod +x install_emulator.sh \
+#   && ./install_emulator.sh  \
+  && rosdep install -r --from-paths . --ignore-src --rosdistro $ROS_DISTRO -y \
+  && cd /ros2_ws \
+  && colcon build --cmake-force-configure \
+  && ros2 daemon stop \
+  && ros2 daemon start \
+  && source /ros2_ws/install/setup.bash
 
+RUN echo 'source /opt/ros/humble/setup.bash' >> ~/.bashrc
 RUN echo 'source /ros2_ws/install/setup.bash' >> ~/.bashrc
 
 WORKDIR /ros2_ws
