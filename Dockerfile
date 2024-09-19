@@ -15,11 +15,13 @@ RUN apt update \
     dbus-x11 \
     vim \ 
     iputils-ping \
+    libgtk-3-dev \
     libpoco-dev \
     liburdfdom-tools \
     libyaml-cpp-dev \
     usbutils \
     python3-pip \
+    docker.io \
     libignition-gazebo6-dev \
     ros-$ROS_DISTRO-ament-cmake \
     ros-$ROS_DISTRO-ament-cmake-python \
@@ -94,7 +96,7 @@ COPY ./Sort-and-Segregate /ros2_ws/src
 RUN source /opt/ros/humble/setup.bash \
   && cd /ros2_ws/src \
 #   && chmod +x install_emulator.sh \
-#   && ./install_emulator.sh  \
+#   && ./install_emulator.sh \
   && rosdep install -r --from-paths . --ignore-src --rosdistro $ROS_DISTRO -y \
   && cd /ros2_ws \
   && colcon build --cmake-force-configure \
@@ -107,3 +109,4 @@ RUN echo 'source /ros2_ws/install/setup.bash' >> ~/.bashrc
 
 WORKDIR /ros2_ws
 CMD [ "bash" ]
+
