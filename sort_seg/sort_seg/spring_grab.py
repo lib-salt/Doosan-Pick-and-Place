@@ -80,11 +80,6 @@ def move(spring):
 ######################### M A I N ###############################
 
 def main():
-    node.get_logger().info('Main method')
-    # rclpy.spin_once(node) 
-    # rclpy.spin(node)
-    # node.get_logger().info('Node has been spun')
-    # while rclpy.ok():
     node.get_logger().info('Main loop started')
     spring_1 = posx(-226, 451, 327, 44, -180, -36)
     spring_2 = posx(-208, 355, 332, 108, 180, -71)
