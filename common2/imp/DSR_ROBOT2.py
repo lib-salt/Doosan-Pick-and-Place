@@ -49,7 +49,6 @@ from std_msgs.msg import String, Int32, Int32MultiArray, Float32, Float64, Float
 import sys
 
 sys.dont_write_bytecode = True
-sys.path.append(os.path.abspath("/home/libby/ros2_ws/install/dsr_msgs2/local/lib/python3.10/dist-packages/dsr_msgs2"))
 
 # import numpy as np
 
