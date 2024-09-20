@@ -95,8 +95,6 @@ COPY ./Sort-and-Segregate /ros2_ws/src
 # Create User ROS workspace
 RUN source /opt/ros/humble/setup.bash \
   && cd /ros2_ws/src \
-#   && chmod +x install_emulator.sh \
-#   && ./install_emulator.sh \
   && rosdep install -r --from-paths . --ignore-src --rosdistro $ROS_DISTRO -y \
   && cd /ros2_ws \
   && colcon build --cmake-force-configure \
