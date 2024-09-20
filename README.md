@@ -27,10 +27,37 @@ ___
 ___
 ## Docker Setup:
 It should be noted that the docker container will not work when working with a virtual robot. To run virtual simulations please refer to the ROS2 local workspace setup.
-### BUILD:
+### Build:
+```
+# Navigate to where you want to clone the repository
+$ git clone -b sort_seg https://github.com/lib-salt/Doosan-Pick-and-Place
+$ docker build -f Doosan-Pick-and-Place/Dockerfile . -t sort_and_segregate
+```
+### services:
+The compose.yml file provides a way to luanch the sort and segregate spring task with varying options.
+> #### __services:__
+ >__sort_seg_loop__ : rviz=true, loop=true, depth_cloud=false  
+  __sort_seg_once__ : rviz=true, loop=false, depth_cloud=false  
+  __sort_seg_loop_and_depth_cloud__ : rviz=true, loop=true, depth_cloud=true  
+  __sort_seg_once_and_depth_cloud__ : rviz=true, loop=false, depth_cloud=true  
+  __sort_seg_loop_no_rviz__ : rviz=false, loop=true  
+  __sort_seg_once_no_riviz__ : rviz=false, loop=false
 
-
+To run the services you can use:
+```
+$ docker compose -f Doosan-Pick-and-Place/compose.yml up <service>
+# For example
+$ docker compose -f Doosan-Pick-and-Place/compose.yml up sort_seg_loop
+```
+Or alternatively you can use:
+```
+$ cd Doosan-Pick-and-place/
+$ docker compose  up <service>
+# For example
+$ docker compose up sort_seg_loop
+```
 ___
+
 ## ROS Workspace Setup (Local):
 ***This ROS2 Package is implemented at ROS2-humble.***
 
@@ -56,9 +83,9 @@ sudo apt-get install -y ros-humble-gazebo-ros-pkgs ros-humble-moveit-msgs ros-hu
 ### Recommended to use the /home/<user>/ros2_ws/src
 $ mkdir -p ~/ros2_ws/src
 $ cd ~/ros2_ws/src
-$ git clone -b sort_seg https://github.com/lib-salt/Sort-and-Segregate
+$ git clone -b sort_seg https://github.com/lib-salt/Doosan-Pick-and-Place
 $ rosdep install -r --from-paths ./gz_ros2_control --ignore-src --rosdistro $ROS_DISTRO -y
-$ cd src/Sort-and-Segregate
+$ cd src/Doosan-Pick-and-Place
 $ ./install_emulator.sh
 $ cd ~/ros2_ws
 $ colcon build
