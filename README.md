@@ -25,8 +25,13 @@ ___
 - Print off the aruco marker given in the github
 - Place the Aruco marker in the environment ensuring it is visible to the camera.
 ___
+## Docker Setup:
+It should be noted that the docker container will not work when working with a virtual robot. To run virtual simulations please refer to the ROS2 local workspace setup.
+### BUILD:
 
-## ROS Workspace Setup:
+
+___
+## ROS Workspace Setup (Local):
 ***This ROS2 Package is implemented at ROS2-humble.***
 
 ### Installation:
