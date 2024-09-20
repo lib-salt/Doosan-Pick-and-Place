@@ -34,7 +34,7 @@ $ git clone -b sort_seg https://github.com/lib-salt/Doosan-Pick-and-Place
 $ docker build -f Doosan-Pick-and-Place/Dockerfile . -t sort_and_segregate
 ```
 ### services:
-The compose.yml file provides a way to luanch the sort and segregate spring task with varying options.
+The compose.yml file provides a way to launch the sort and segregate spring task with varying options.
 > #### __services:__
  >__sort_seg_loop__ : rviz=true, loop=true, depth_cloud=false  
   __sort_seg_once__ : rviz=true, loop=false, depth_cloud=false  
