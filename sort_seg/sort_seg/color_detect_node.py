@@ -33,9 +33,6 @@ class ColorDetectNode(Node):
 
         self.tf_broadcaster = tf2_ros.TransformBroadcaster(self)
 
-        # Initialize lists to store object coordinates and center coordinates
-        self.object_coordinates = []
-        self.center_coordinates = []
         self.color_image = None
         self.depth_image = None
         self.camera_info = None
