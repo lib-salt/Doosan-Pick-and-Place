@@ -21,7 +21,6 @@ RUN apt update \
     libyaml-cpp-dev \
     usbutils \
     python3-pip \
-    docker.io \
     libignition-gazebo6-dev \
     ros-$ROS_DISTRO-ament-cmake \
     ros-$ROS_DISTRO-ament-cmake-python \
