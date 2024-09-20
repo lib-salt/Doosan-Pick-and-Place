@@ -83,44 +83,8 @@ services:
     devices:
     - /dev/:/dev/
 
-  virtual_moveit: 
-    image: sort_and_segregate
-    build: .
-    command: >
-      bash -c
-      "source /ros2_ws/install/setup.bash &&
-      ros2 launch dsr_bringup2 dsr_bringup2_moveit.launch.py mode:=virtual host:=127.0.0.1"
-    privileged: true
-    network_mode: host
-    ipc: host
-    pid: host
-    devices:
-    - /dev/:/dev/
 
-  virtual_rviz: 
-    image: sort_and_segregate
-    build: .
-    command: >
-      bash -c
-      "source /ros2_ws/install/setup.bash &&
-      ros2 launch dsr_bringup2 dsr_bringup2_rviz.launch.py mode:=virtual host:=127.0.0.1"
-    privileged: true
-    network_mode: host
-    ipc: host
-    pid: host
-    devices:
-    - /dev/:/dev/
 
-  virtual_gazebo: 
-    image: sort_and_segregate
-    build: .
-    command: >
-      bash -c
-      "source /ros2_ws/install/setup.bash &&
-      ros2 launch dsr_bringup2 dsr_bringup2_gazebo.launch.py mode:=virtual host:=127.0.0.1"
-    privileged: true
-    network_mode: host
-    ipc: host
-    pid: host
-    devices:
-    - /dev/:/dev/
+
+
+
